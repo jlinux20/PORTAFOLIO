@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juan Mamani - Ethical Hacker & Network Specialist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-firestore-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-auth-compat.min.js"></script>
+
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/hacker-theme.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+    <script src="/static/js/matrix-rain.js"></script>
+
+    <link rel="stylesheet" href="/static/css/custom-styles.css">
+</head>
+<body>
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="#" class="logo glitch" data-text="JUAN.MAMANI">JUAN.MAMANI</a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#" class="nav-link active" data-section="home">~/home</a></li>
+                    <li><a href="#" class="nav-link" data-section="about">~/about</a></li>
+                    <li><a href="#" class="nav-link" data-section="skills">~/skills</a></li>
+                    <li><a href="#" class="nav-link" data-section="projects">~/projects</a></li>
+                    <li><a href="#" class="nav-link" data-section="certs">~/certifications</a></li>
+                    <li><a href="#" class="nav-link" data-section="contact">~/contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="container">
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="terminal-button"></div>
+                        <div class="terminal-button yellow"></div>
+                        <div class="terminal-button green"></div>
+                        <span style="margin-left: 1rem; color: var(--text-muted);">juan@hacker-terminal:~$</span>
+                    </div>
+                    <div class="terminal-content" id="terminal-output">
+                        <div class="terminal-output">
+                            <span class="terminal-prompt">juan@cybersec:~$</span> 
+                            <span class="terminal-command">whoami</span>
+                        </div>
+                        <div class="terminal-output" id="typing-text">
+                            Iniciando sistema...<span class="typing-cursor">|</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem;">
+                    <span class="glitch" data-text="ABOUT_ME.EXE">ABOUT_ME.EXE</span>
+                </h2>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h3 class="card-title">📋 PERFIL_PERSONAL</h3>
+                        <div class="card-content">
+                            <p><strong>Nombre:</strong> Juan Segundo Mamani Santander</p>
+                            <p><strong>Ubicación:</strong> Acopia, Cusco - Perú</p>
+                            <p><strong>Edad:</strong> 33 años</p>
+                            <p><strong>Email:</strong> jlinux20@gmail.com</p>
+                            <p><strong>Teléfono:</strong> +51 950712123</p>
+                            <p><strong>Especialidad:</strong> Ethical Hacking & Network Security</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🎯 OBJETIVOS</h3>
+                        <div class="card-content">
+                            <p>Especialista en <strong>Redes y Comunicaciones</strong> con enfoque en <strong>Ciberseguridad</strong> y <strong>Hacking Ético</strong>. Mi pasión es resolver problemas complejos de infraestructura IT y proteger sistemas contra amenazas cibernéticas.</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">💡 FILOSOFÍA</h3>
+                        <div class="card-content">
+                            <p>Creo en el aprendizaje continuo y la innovación tecnológica. Mi enfoque combina conocimientos técnicos sólidos con pensamiento creativo para encontrar soluciones óptimas y seguras.</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🎓 FORMACIÓN</h3>
+                        <div class="card-content">
+                            <p><strong>Instituto:</strong> CIBERTEC</p>
+                            <p><strong>Carrera:</strong> Administrador de Redes y Comunicaciones</p>
+                            <p><strong>Período:</strong> 2014 - 2024</p>
+                            <p><strong>Estado:</strong> Egresado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section">
+            <div class="container">
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem;">
+                    <span class="glitch" data-text="SKILL_MATRIX.DAT">SKILL_MATRIX.DAT</span>
+                </h2>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3 class="card-title">🔐 CYBERSECURITY</h3>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Ethical Hacking</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Network Security</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Penetration Testing</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🌐 NETWORKING</h3>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>CISCO (CCNA/CCNA Security)</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Network Design & Implementation</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>VoIP & Telephony</span>
+                                <span>88%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 88%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">💻 SYSTEMS</h3>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Linux Administration</span>
+                                <span>92%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Windows Server</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>VMware vCenter/ESXi</span>
+                                <span>88%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 88%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🗄️ DATABASE & CLOUD</h3>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>SQL Server</span>
+                                <span>80%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Cloud Infrastructure</span>
+                                <span>82%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 82%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Web Development</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section">
+            <div class="container">
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem;">
+                    <span class="glitch" data-text="PROJECT_ARCHIVE.LOG">PROJECT_ARCHIVE.LOG</span>
+                </h2>
+
+                <div class="grid">
+                    <div class="project-card">
+                        <h3 class="project-title">🏛️ Auditoría Informática - Municipalidad Manchay</h3>
+                        <div class="card-content">
+                            <p>Implementación completa de auditoría de seguridad informática aplicando técnicas de <strong>Hacking Ético</strong> para identificar vulnerabilidades críticas en la infraestructura municipal.</p>
+                            <div class="project-tech">
+                                <span class="tech-tag">Ethical Hacking</span>
+                                <span class="tech-tag">Vulnerability Assessment</span>
+                                <span class="tech-tag">Network Security</span>
+                                <span class="tech-tag">Penetration Testing</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <h3 class="project-title">🛒 Seguridad Perimetral - Plaza Vea</h3>
+                        <div class="card-content">
+                            <p>Diseño e implementación de arquitectura de seguridad perimetral para proteger la infraestructura crítica de la cadena retail más importante del país.</p>
+                            <div class="project-tech">
+                                <span class="tech-tag">Firewall Management</span>
+                                <span class="tech-tag">IDS/IPS</span>
+                                <span class="tech-tag">Network Segmentation</span>
+                                <span class="tech-tag">DMZ Configuration</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <h3 class="project-title">☁️ Data Center en la Nube</h3>
+                        <div class="card-content">
+                            <p>Configuración completa de data center virtualizado utilizando <strong>VMware vCenter</strong> y <strong>ESXi</strong> para optimizar recursos y garantizar alta disponibilidad.</p>
+                            <div class="project-tech">
+                                <span class="tech-tag">VMware vCenter</span>
+                                <span class="tech-tag">ESXi</span>
+                                <span class="tech-tag">Virtualization</span>
+                                <span class="tech-tag">High Availability</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <h3 class="project-title">📞 Telefonía VoIP Empresarial</h3>
+                        <div class="card-content">
+                            <p>Implementación de sistema de telefonía IP completo usando tecnologías <strong>Open Source</strong> y <strong>Audio Codes</strong> en plataforma Linux.</p>
+                            <div class="project-tech">
+                                <span class="tech-tag">VoIP</span>
+                                <span class="tech-tag">Audio Codes</span>
+                                <span class="tech-tag">Linux</span>
+                                <span class="tech-tag">Open Source</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <h3 class="project-title">🌐 Infraestructura de Red LAN/WAN</h3>
+                        <div class="card-content">
+                            <p>Diseño, implementación y administración de redes corporativas complejas con protocolos avanzados de enrutamiento y switching.</p>
+                            <div class="project-tech">
+                                <span class="tech-tag">CISCO</span>
+                                <span class="tech-tag">Routing & Switching</span>
+                                <span class="tech-tag">VLAN</span>
+                                <span class="tech-tag">Network Design</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <h3 class="project-title">🗄️ Administración SQL Server</h3>
+                        <div class="card-content">
+                            <p>Desarrollo, optimización y gestión de bases de datos críticas con <strong>SQL Server</strong>, incluyendo backup strategies y performance tuning.</p>
+                            <div class="project-tech">
+                                <span class="tech-tag">SQL Server</span>
+                                <span class="tech-tag">Database Design</span>
+                                <span class="tech-tag">Performance Optimization</span>
+                                <span class="tech-tag">Backup & Recovery</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🐧 LINUX COMMANDS EXPLAINED</h3>
+                        <div class="card-content">
+                            <pre class="terminal-output" style="margin: 1rem 0; font-size: 0.9em;">
+# sudo (SuperUser DO)
+# Ejecuta comandos con privilegios de administrador
+sudo apt update         # Actualiza lista de paquetes
+sudo su                # Cambia a usuario root
+sudo -l                # Lista permisos de sudo
+
+# kee/keepass
+# Gestor de contraseñas seguro
+keepass                # Inicia el gestor de contraseñas
+keepassxc             # Versión moderna de KeePass
+                            </pre>
+                            <div class="tech-tag">Privilege Escalation</div>
+                            <div class="tech-tag">Password Management</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🔐 GESTIÓN DE CONTRASEÑAS</h3>
+                        <div class="card-content">
+                            <pre class="terminal-output" style="margin: 1rem 0; font-size: 0.9em;">
+# KeePass - Gestor de Contraseñas Seguro
+# Es una aplicación para guardar contraseñas cifradas
+
+keepass                # Inicia el gestor de contraseñas básico
+keepassxc             # Versión moderna con más funciones
+
+# Características principales:
+- Cifrado AES-256
+- Generador de contraseñas seguras
+- Auto-type para llenar formularios
+- Organización en grupos y subgrupos
+- Protección contra keyloggers
+
+# Comandos básicos en KeePass:
+Ctrl + E              # Editar entrada
+Ctrl + B              # Copiar nombre usuario
+Ctrl + C              # Copiar contraseña
+Ctrl + V              # Pegar en campo seguro
+                            </pre>
+                            <div class="tech-tag">Password Manager</div>
+                            <div class="tech-tag">Encryption</div>
+                            <div class="tech-tag">Security</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🔧 COMANDOS BÁSICOS EXPLICADOS</h3>
+                        <div class="card-content">
+                            <pre class="terminal-output" style="margin: 1rem 0; font-size: 0.9em;">
+# Comandos de Navegación
+pwd                     # Muestra la ruta actual donde estás
+ls                      # Lista archivos y carpetas
+cd /ruta               # Cambia de directorio
+
+# Comandos de Sistema
+top                     # Muestra procesos en ejecución
+ps aux                  # Lista todos los procesos
+kill [PID]             # Termina un proceso
+
+# Comandos de Red
+ifconfig               # Muestra configuración de red
+ping [sitio]          # Prueba conexión a un sitio
+netstat                # Muestra conexiones activas
+
+# Comandos de Archivos
+cat [archivo]          # Muestra contenido de archivo
+nano [archivo]         # Editor de texto simple
+vim [archivo]          # Editor avanzado
+                            </pre>
+                            <div class="tech-tag">Sistema</div>
+                            <div class="tech-tag">Navegación</div>
+                            <div class="tech-tag">Red</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section id="certs" class="section">
+            <div class="container">
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem;">
+                    <span class="glitch" data-text="CERTIFICATION_ARSENAL">CERTIFICATION_ARSENAL</span>
+                </h2>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3 class="card-title">🎓 CISCO CERTIFICATIONS</h3>
+                        <div class="card-content">
+                            <div style="margin-bottom: 1rem;">
+                                <strong>📡 CCNA R&S Complete Track:</strong>
+                                <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                                    <li>✅ Introduction to Networks (Aug 7, 2015)</li>
+                                    <li>✅ Routing and Switching Essentials (Jan 5, 2016)</li>
+                                    <li>✅ Scaling Networks (Jul 6, 2016)</li>
+                                    <li>✅ Connecting Networks (Dec 13, 2016)</li>
+                                </ul>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>🔐 CCNA Security (Aug 8, 2017)</strong>
+                                <p style="color: var(--text-muted); font-size: 0.9rem;">Especialización en seguridad de redes empresariales</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>🛡️ Network Security (Jul 26, 2024)</strong>
+                                <p style="color: var(--text-muted); font-size: 0.9rem;">Seguridad perimetral avanzada</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🤖 MODERN TECH STACK</h3>
+                        <div class="card-content">
+                            <div style="margin-bottom: 1rem;">
+                                <strong>💻 IT Essentials (Dec 19, 2023)</strong>
+                                <p style="color: var(--text-muted); font-size: 0.9rem;">Hardware y Software fundamentals</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>🔧 DevNet Associate (Jul 30, 2024)</strong>
+                                <p style="color: var(--text-muted); font-size: 0.9rem;">Redes programables y automatización</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">📚 EDUCACIÓN COMPLEMENTARIA</h3>
+                        <div class="card-content">
+                            <div style="margin-bottom: 1rem;">
+                                <strong>👥 Liderazgo (Aug-Nov 2015)</strong>
+                                <p style="color: var(--text-muted); font-size: 0.9rem;">Xtreme Team International</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>⚡ Instalaciones Eléctricas (2013)</strong>
+                                <p style="color: var(--text-muted); font-size: 0.9rem;">SENCICO - Especialización en edificaciones</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🏆 ESPECIALIZACIÓN ACTUAL</h3>
+                        <div class="card-content">
+                            <p>Mi enfoque actual está en <strong>Ciberseguridad Avanzada</strong> y <strong>Hacking Ético</strong>, combinando mis sólidos conocimientos en redes CISCO con técnicas modernas de:</p>
+                            <ul style="margin-left: 1rem; margin-top: 0.5rem; color: var(--text-muted);">
+                                <li>🔍 Penetration Testing</li>
+                                <li>🛡️ Vulnerability Assessment</li>
+                                <li>🚨 Incident Response</li>
+                                <li>🔐 Network Forensics</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div class="container">
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem;">
+                    <span class="glitch" data-text="CONTACT_PROTOCOL">CONTACT_PROTOCOL</span>
+                </h2>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3 class="card-title">📡 CANALES DE COMUNICACIÓN</h3>
+                        <div class="card-content">
+                            <p><strong>📧 Email:</strong> jlinux20@gmail.com</p>
+                            <p><strong>📱 WhatsApp:</strong> +51 950712123</p>
+                            <p><strong>📍 Ubicación:</strong> Jr. Exaltación S/N, Acopia - Cusco, Perú</p>
+                            <p><strong>⏰ Disponibilidad:</strong> Lun-Vie 8:00-18:00 GMT-5</p>
+                            <br>
+                            <p style="color: var(--text-muted);">🚀 Disponible para proyectos de:</p>
+                            <ul style="margin-left: 1rem; color: var(--text-muted);">
+                                <li>Auditorías de seguridad</li>
+                                <li>Implementación de redes</li>
+                                <li>Consultoría en ciberseguridad</li>
+                                <li>Penetration testing</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">💬 ENVIAR MENSAJE</h3>
+                        <form id="contact-form" class="card-content">
+                            <div class="form-group">
+                                <label class="form-label">Nombre Completo:</label>
+                                <input type="text" id="contact-name" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email:</label>
+                                <input type="email" id="contact-email" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Empresa/Organización:</label>
+                                <input type="text" id="contact-company" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tipo de Proyecto:</label>
+                                <select id="contact-type" class="form-input">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="security-audit">Auditoría de Seguridad</option>
+                                    <option value="network-implementation">Implementación de Redes</option>
+                                    <option value="penetration-testing">Penetration Testing</option>
+                                    <option value="consulting">Consultoría General</option>
+                                    <option value="other">Otro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Mensaje:</label>
+                                <textarea id="contact-message" class="form-textarea" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn">ENVIAR_MENSAJE.EXE</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <h3 class="card-title">📊 MENSAJES RECIENTES</h3>
+                    <div id="recent-messages" class="card-content">
+                        <p style="color: var(--text-muted);">Cargando mensajes desde Firebase...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/js/custom-scripts.js"></script>
+</body>
+</html>

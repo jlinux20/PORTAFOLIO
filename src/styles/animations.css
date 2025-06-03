@@ -1,0 +1,24 @@
+/* animations.css - animaciones CSS */
+
+@keyframes glitch {
+    0% {
+        text-shadow: 2px 0 red, -2px 0 cyan;
+    }
+    50% {
+        text-shadow: -2px 0 red, 2px 0 cyan;
+    }
+    100% {
+        text-shadow: 2px 0 red, -2px 0 cyan;
+    }
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
