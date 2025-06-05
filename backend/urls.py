@@ -10,5 +10,9 @@ urlpatterns = [
     path('example/', example_view, name='example'),
 ]
 
+from django.conf.urls.static import static
+from django.conf import settings
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / 'src' / 'styles')
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / 'src' / 'scripts')
