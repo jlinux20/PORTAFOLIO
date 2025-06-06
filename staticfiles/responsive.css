@@ -1,0 +1,17 @@
+/* responsive.css - estilos para diseño responsivo */
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    #app {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 12px;
+    }
+}

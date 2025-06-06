@@ -323,13 +323,39 @@ class ContactForm {
     }
 }
 
+import { Particle, ParticleSystem, loadingScreen } from './hacker-effects.js';
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
     new MatrixRain();
     new TerminalTyping();
     new Navigation();
     new ContactForm();
-    
+
+    // Initialize Particle System background effect
+    const particleCanvas = document.createElement('canvas');
+    particleCanvas.id = 'particle-canvas';
+    particleCanvas.style.position = 'fixed';
+    particleCanvas.style.top = '0';
+    particleCanvas.style.left = '0';
+    particleCanvas.style.width = '100%';
+    particleCanvas.style.height = '100%';
+    particleCanvas.style.zIndex = '0';
+    particleCanvas.style.pointerEvents = 'none';
+    document.body.appendChild(particleCanvas);
+
+    const particleSystem = new ParticleSystem(particleCanvas);
+    // Add some particles initially
+    for (let i = 0; i < 50; i++) {
+        const x = Math.random() * particleCanvas.width;
+        const y = Math.random() * particleCanvas.height;
+        const radius = Math.random() * 2 + 1;
+        const color = 'rgba(0, 255, 65, 0.7)';
+        const velocity = { x: (Math.random() - 0.5) * 0.5, y: (Math.random() - 0.5) * 0.5 };
+        particleSystem.addParticle(new Particle(x, y, radius, color, velocity));
+    }
+    particleSystem.start();
+
     // Add some interactive effects
     document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('mouseenter', () => {

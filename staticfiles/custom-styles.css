@@ -1,0 +1,22 @@
+/* ...existing code... */
+
+.message-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.message-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.message-item strong {
+    color: var(--accent-color);
+}
+
+.message-item small {
+    color: var(--text-muted);
+    display: block;
+    margin-top: 0.5rem;
+}

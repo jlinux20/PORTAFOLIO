@@ -1,0 +1,34 @@
+/* hacker-theme.css - tema visual estilo hacker */
+
+body {
+    background-color: #000000;
+    color: #00ff00;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fira Code', monospace;
+    color: #00ffff;
+}
+
+.cursor {
+    border-left: 2px solid #00ff00;
+    animation: blink 1s step-start 0s infinite;
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
+
+/* Estilos para cuadros y secciones */
+.section {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid #00ff00;
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 10px #00ff00;
+    border-radius: 8px;
+}
+
+/* Removed red border from body */
