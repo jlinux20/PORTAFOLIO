@@ -62,7 +62,7 @@ export const firestoreSettings = {
   // Inicializar Firebase
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+  const analytics = (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') ? getAnalytics(app) : null;
 
 // Servicio firebase mejorado
 export const firebaseService = {
@@ -102,7 +102,9 @@ export const firebaseService = {
                 name: String(messageData.name || '').trim(),
                 email: String(messageData.email || '').trim().toLowerCase(),
                 message: String(messageData.message || '').trim(),
-                company: messageData.company ? String(messageData.company).trim() : undefined
+                ...(messageData.company && {
+                    company: String(messageData.company).trim()
+                })
             };
 
             this.validateMessage(sanitizedData);
@@ -111,7 +113,7 @@ export const firebaseService = {
                 ...sanitizedData,
                 timestamp: serverTimestamp(),
                 read: false,
-                userAgent: navigator.userAgent,
+                userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'test',
                 ipAddress: await this.getClientIP(),
                 created: new Date().toISOString()
             };
@@ -144,22 +146,23 @@ async getRecentMessages(page = 1, pageSize = 5) {
         if (pageSize < 1) throw new FirebaseError('Tamaño de página inválido', 'VALIDATION_ERROR');
 
         const messagesRef = collection(db, 'messages');
-        const q = query(
+
+        // Calculate offset for pagination
+        const offset = (page - 1) * pageSize;
+
+        // Get all messages ordered by timestamp descending
+        const allMessagesQuery = query(
             messagesRef,
-            orderBy('timestamp', 'desc'),
-            limit(pageSize)
+            orderBy('timestamp', 'desc')
         );
 
-        const [querySnapshot, totalCount] = await Promise.all([
-            getDocs(q),
-            this.getMessagesCount()
-        ]);
+        const allMessagesSnapshot = await getDocs(allMessagesQuery);
 
-        const messages = [];
-        
-        querySnapshot.forEach((doc) => {
+        // Convert snapshot to array and apply pagination manually
+        const allMessages = [];
+        allMessagesSnapshot.forEach((doc) => {
             const data = doc.data();
-            messages.push({
+            allMessages.push({
                 id: doc.id,
                 ...data,
                 timestamp: data.timestamp?.toDate() || new Date(),
@@ -167,9 +170,14 @@ async getRecentMessages(page = 1, pageSize = 5) {
             });
         });
 
+        // Paginate messages manually
+        const paginatedMessages = allMessages.slice(offset, offset + pageSize);
+
+        const totalCount = allMessages.length;
+
         return {
             success: true,
-            messages,
+            messages: paginatedMessages,
             pagination: {
                 page,
                 limit: pageSize,
@@ -178,14 +186,14 @@ async getRecentMessages(page = 1, pageSize = 5) {
             }
         };
 
-        } catch (error) {
-            console.error('Error obteniendo mensajes:', error);
-            throw new FirebaseError(
-                'Error al obtener mensajes',
-                error.code || 'FETCH_ERROR',
-                error
-            );
-        }
+    } catch (error) {
+        console.error('Error obteniendo mensajes:', error);
+        throw new FirebaseError(
+            'Error al obtener mensajes',
+            error.code || 'FETCH_ERROR',
+            error
+        );
+    }
 },
 
     // Obtener total de mensajes
