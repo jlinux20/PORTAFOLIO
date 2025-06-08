@@ -25,8 +25,6 @@ urlpatterns = [
     path('recent_messages/', recent_messages_view, name='recent_messages'),
 ]
 
-from django.conf.urls.static import static
-from django.conf import settings
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

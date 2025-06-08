@@ -3,41 +3,709 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juan Mamani - Ethical Hacker & Network Specialist</title>
+    <title>Juan Mamani - Elite Cybersecurity Specialist</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-app-compat.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-firestore-compat.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-auth-compat.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --accent-bg: #2a2a2a;
+            --primary-text: #ffffff;
+            --secondary-text: #a0a0a0;
+            --accent-text: #00ff88;
+            --error-text: #ff4444;
+            --warning-text: #ffaa00;
+            --terminal-green: #00ff88;
+            --terminal-blue: #00aaff;
+            --terminal-purple: #aa00ff;
+            --border-color: #333;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glow-color: #00ff88;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--primary-text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 170, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(170, 0, 255, 0.1) 0%, transparent 50%);
+            animation: bgPulse 20s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent-text);
+            border-radius: 50%;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-text);
+            text-decoration: none;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent-text);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .logo:hover::before {
+            left: 100%;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent-text);
+            background: var(--glass-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .section {
+            display: none;
+            min-height: calc(100vh - 80px);
+            padding: 4rem 0;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--accent-text), var(--terminal-blue), var(--terminal-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5)); }
+            100% { filter: drop-shadow(0 0 40px rgba(0, 255, 136, 0.8)); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--secondary-text);
+            margin-bottom: 2rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .typing-animation {
+            display: inline-block;
+            border-right: 3px solid var(--accent-text);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { border-color: var(--accent-text); }
+            51%, 100% { border-color: transparent; }
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: 2px solid var(--accent-text);
+            background: transparent;
+            color: var(--accent-text);
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-text);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 0;
+        }
+
+        .btn:hover {
+            color: var(--primary-bg);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn.secondary {
+            border-color: var(--terminal-blue);
+            color: var(--terminal-blue);
+        }
+
+        .btn.secondary::before {
+            background: var(--terminal-blue);
+        }
+
+        .btn.secondary:hover {
+            box-shadow: 0 10px 30px rgba(0, 170, 255, 0.3);
+        }
+
+        /* Terminal Component */
+        .terminal {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .terminal-header {
+            background: var(--accent-bg);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .terminal-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-right: 1rem;
+        }
+
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-btn.close { background: #ff5555; }
+        .terminal-btn.minimize { background: #ffaa00; }
+        .terminal-btn.maximize { background: #00ff88; }
+
+        .terminal-title {
+            font-family: 'Fira Code', monospace;
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+        }
+
+        .terminal-content {
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            line-height: 1.8;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.5rem;
+        }
+
+        .terminal-prompt {
+            color: var(--accent-text);
+        }
+
+        .terminal-command {
+            color: var(--terminal-blue);
+        }
+
+        .terminal-output {
+            color: var(--primary-text);
+        }
+
+        .terminal-error {
+            color: var(--error-text);
+        }
+
+        /* Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-text), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.1);
+            border-color: var(--accent-text);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-text);
+            font-family: 'Fira Code', monospace;
+        }
+
+        .card-content {
+            color: var(--secondary-text);
+            line-height: 1.7;
+        }
+
+        /* Skills */
+        .skill-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-name {
+            font-weight: 500;
+            color: var(--primary-text);
+        }
+
+        .skill-percentage {
+            color: var(--accent-text);
+            font-family: 'Fira Code', monospace;
+        }
+
+        .skill-bar {
+            height: 8px;
+            background: var(--accent-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-text), var(--terminal-blue));
+            border-radius: 4px;
+            position: relative;
+            transition: width 2s ease;
+        }
+
+        .skill-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Project Cards */
+        .project-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+            border-color: var(--accent-text);
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-text);
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-tag {
+            background: var(--accent-bg);
+            color: var(--accent-text);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-family: 'Fira Code', monospace;
+            border: 1px solid var(--accent-text);
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            background: var(--accent-text);
+            color: var(--primary-bg);
+            transform: scale(1.05);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent-text);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--primary-text);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-text);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            animation: slideInLeft 0.8s ease forwards;
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            animation: slideInRight 0.8s ease forwards;
+        }
+
+        @keyframes slideInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 1rem;
+            }
+            
+            .nav-link {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Status indicators */
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .status-online {
+            background: var(--accent-text);
+        }
+
+        .status-busy {
+            background: var(--warning-text);
+        }
+
+        .status-offline {
+            background: var(--error-text);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Glitch effect */
+        .glitch {
+            position: relative;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            color: #ff0000;
+            animation: glitch 0.3s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+        }
+
+        .glitch::after {
+            color: #00ffff;
+            animation: glitch 0.3s infinite reverse;
+            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+    </style>
 </head>
 <body>
-    <h1 style="display:none;">Juan Mamani - Ethical Hacker & Network Specialist</h1>
-
-    <link rel="stylesheet" href="/static/main.css">
-    <link rel="stylesheet" href="/static/hacker-theme.css">
-    <link rel="stylesheet" href="/static/responsive.css">
-    <script src="/static/matrix-rain.js"></script>
-
-    <link rel="stylesheet" href="/static/custom-styles.css">
-</body>
-    <!-- Matrix Rain Canvas -->
-    <canvas id="matrix-canvas"></canvas>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
 
     <!-- Header -->
     <header class="header">
         <div class="nav-container">
-            <a href="#" class="logo glitch" data-text="JUAN.MAMANI">JUAN.MAMANI</a>
-            <nav>
-                <ul class="nav-menu">
-                    <li><a href="#" class="nav-link active" data-section="home">~/home</a></li>
-                    <li><a href="#" class="nav-link" data-section="about">~/about</a></li>
-                    <li><a href="#" class="nav-link" data-section="skills">~/skills</a></li>
-                    <li><a href="#" class="nav-link" data-section="projects">~/projects</a></li>
-                    <li><a href="#" class="nav-link" data-section="certs">~/certifications</a></li>
-                    <li><a href="#" class="nav-link" data-section="contact">~/contact</a></li>
+            <a href="#" class="logo">JUAN.MAMANI</a>
+            <nav role="navigation" aria-label="Main navigation">
+                <ul class="nav-menu" role="menubar">
+                    <li role="none"><a href="#home" class="nav-link active" role="menuitem" data-section="home">~/home</a></li>
+                    <li role="none"><a href="#about" class="nav-link" role="menuitem" data-section="about">~/about</a></li>
+                    <li role="none"><a href="#skills" class="nav-link" role="menuitem" data-section="skills">~/skills</a></li>
+                    <li role="none"><a href="#projects" class="nav-link" role="menuitem" data-section="projects">~/projects</a></li>
+                    <li role="none"><a href="#certs" class="nav-link" role="menuitem" data-section="certs">~/certs</a></li>
+                    <li role="none"><a href="#contact" class="nav-link" role="menuitem" data-section="contact">~/contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -47,22 +715,17 @@
     <main class="main-content">
         <!-- Home Section -->
         <section id="home" class="section active">
-            <div class="container">
-                <div class="terminal-container">
-                    <div class="terminal-header">
-                        <div class="terminal-button"></div>
-                        <div class="terminal-button yellow"></div>
-                        <div class="terminal-button green"></div>
-                        <span style="margin-left: 1rem; color: var(--text-muted);">juan@hacker-terminal:~$</span>
-                    </div>
-                    <div class="terminal-content" id="terminal-output">
-                        <div class="terminal-output">
-                            <span class="terminal-prompt">juan@cybersec:~$</span> 
-                            <span class="terminal-command">whoami</span>
-                        </div>
-                        <div class="terminal-output" id="typing-text">
-                            Iniciando sistema...<span class="typing-cursor">|</span>
-                        </div>
+            <div class="hero">
+                <div class="hero-content fade-in">
+                    <h1 class="hero-title glitch" data-text="JUAN MAMANI">JUAN MAMANI</h1>
+                    <p class="hero-subtitle">
+                        <span class="status-indicator status-online"></span>
+                        <span id="typing-text">Ethical Hacker & Network Security Specialist</span>
+                        <span class="typing-animation">|</span>
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#" class="btn" data-section="projects">VIEW_PROJECTS.EXE</a>
+                        <a href="#" class="btn secondary" data-section="contact">CONTACT_ME.EXE</a>
                     </div>
                 </div>
             </div>
@@ -71,44 +734,87 @@
         <!-- About Section -->
         <section id="about" class="section">
             <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
                     <span class="glitch" data-text="ABOUT_ME.EXE">ABOUT_ME.EXE</span>
                 </h2>
                 
+                <div class="terminal slide-in-left">
+                    <div class="terminal-header">
+                        <div class="terminal-buttons">
+                            <div class="terminal-btn close"></div>
+                            <div class="terminal-btn minimize"></div>
+                            <div class="terminal-btn maximize"></div>
+                        </div>
+                        <div class="terminal-title">juan@cybersec-workstation:~$</div>
+                    </div>
+                    <div class="terminal-content">
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">juan@cybersec:~$</span> 
+                            <span class="terminal-command">cat personal_info.txt</span>
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ╔═══════════════════════════════════════════════════════════════════╗
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ║ NOMBRE: Juan Segundo Mamani Santander                            ║
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ║ UBICACIÓN: Acopia, Cusco - Perú                                  ║
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ║ EDAD: 33 años                                                    ║
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ║ ESPECIALIDAD: Ethical Hacking & Network Security                 ║
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ║ STATUS: Available for new challenges                             ║
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ╚═══════════════════════════════════════════════════════════════════╝
+                        </div>
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">juan@cybersec:~$</span> 
+                            <span class="terminal-command">whoami --verbose</span>
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            > Especialista en Ciberseguridad con más de 10 años de experiencia
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            > Experto en Penetration Testing y Vulnerability Assessment
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            > Certificado en CISCO CCNA R&S y CCNA Security
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            > Apasionado por proteger infraestructuras críticas
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid">
-                    <div class="card">
-                        <h3 class="card-title">📋 PERFIL_PERSONAL</h3>
+                    <div class="card slide-in-left">
+                        <h3 class="card-title">🎯 MISIÓN</h3>
                         <div class="card-content">
-                            <p><strong>Nombre:</strong> Juan Segundo Mamani Santander</p>
-                            <p><strong>Ubicación:</strong> Acopia, Cusco - Perú</p>
-                            <p><strong>Edad:</strong> 33 años</p>
-                            <p><strong>Email:</strong> jlinux20@gmail.com</p>
-                            <p><strong>Teléfono:</strong> +51 950712123</p>
-                            <p><strong>Especialidad:</strong> Ethical Hacking & Network Security</p>
+                            <p>Proteger infraestructuras críticas mediante técnicas avanzadas de <strong>Ethical Hacking</strong> y <strong>Penetration Testing</strong>. Mi objetivo es identificar vulnerabilidades antes que los atacantes y fortalecer la postura de seguridad de las organizaciones.</p>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <h3 class="card-title">🎯 OBJETIVOS</h3>
+                    <div class="card slide-in-right">
+                        <h3 class="card-title">🛡️ FILOSOFÍA</h3>
                         <div class="card-content">
-                            <p>Especialista en <strong>Redes y Comunicaciones</strong> con enfoque en <strong>Ciberseguridad</strong> y <strong>Hacking Ético</strong>. Mi pasión es resolver problemas complejos de infraestructura IT y proteger sistemas contra amenazas cibernéticas.</p>
+                            <p>La seguridad no es un producto, es un proceso. Creo en el <strong>aprendizaje continuo</strong>, la <strong>innovación constante</strong> y en pensar como un atacante para defender mejor. Cada vulnerabilidad es una oportunidad de mejora.</p>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <h3 class="card-title">💡 FILOSOFÍA</h3>
-                        <div class="card-content">
-                            <p>Creo en el aprendizaje continuo y la innovación tecnológica. Mi enfoque combina conocimientos técnicos sólidos con pensamiento creativo para encontrar soluciones óptimas y seguras.</p>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 class="card-title">🎓 FORMACIÓN</h3>
+                    <div class="card fade-in">
+                        <h3 class="card-title">🎓 FORMACIÓN ACADÉMICA</h3>
                         <div class="card-content">
                             <p><strong>Instituto:</strong> CIBERTEC</p>
-                            <p><strong>Carrera:</strong> Administrador de Redes y Comunicaciones</p>
+                            <p><strong>Especialidad:</strong> Administrador de Redes y Comunicaciones</p>
                             <p><strong>Período:</strong> 2014 - 2024</p>
-                            <p><strong>Estado:</strong> Egresado</p>
+                            <p><strong>Estado:</strong> <span style="color: var(--accent-text);">✅ Egresado</span></p>
+                            <p><strong>Enfoque:</strong> Ciberseguridad y Hacking Ético</p>
                         </div>
                     </div>
                 </div>
@@ -118,131 +824,168 @@
         <!-- Skills Section -->
         <section id="skills" class="section">
             <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
                     <span class="glitch" data-text="SKILL_MATRIX.DAT">SKILL_MATRIX.DAT</span>
                 </h2>
 
                 <div class="grid">
-                    <div class="card">
+                    <div class="card slide-in-left">
                         <h3 class="card-title">🔐 CYBERSECURITY</h3>
                         <div class="skill-item">
-                            <div class="skill-name">
-                                <span>Ethical Hacking</span>
-                                <span>90%</span>
+                            <div class="skill-header">
+                                <span class="skill-name">Ethical Hacking</span>
+                                <span class="skill-percentage">90%</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 90%"></div>
+                                <div class="skill-progress" data-width="90"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <div class="skill-name">
-                                <span>Network Security</span>
-                                <span>95%</span>
+                            <div class="skill-header">
+                                <span class="skill-name">Penetration Testing</span>
+                                <span class="skill-percentage">85%</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 95%"></div>
+                                <div class="skill-progress" data-width="85"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <div class="skill-name">
-                                <span>Penetration Testing</span>
-                                <span>85%</span>
+                            <div class="skill-header">
+                                <span class="skill-name">Vulnerability Assessment</span>
+                                <span class="skill-percentage">92%</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 85%"></div>
+                                <div class="skill-progress" data-width="92"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Network Security</span>
+                                <span class="skill-percentage">95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="95"></div>
                             </div>
                         </div>
                     </div>
+                
 
-                    <div class="card">
+                    <div class="card slide-in-right">
                         <h3 class="card-title">🌐 NETWORKING</h3>
                         <div class="skill-item">
-                            <div class="skill-name">
-                                <span>CISCO (CCNA/CCNA Security)</span>
-                                <span>95%</span>
+                            <div class="skill-header">
+                                <span class="skill-name">CISCO CCNA</span>
+                                <span class="skill-percentage">95%</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 95%"></div>
+                                <div class="skill-progress" data-width="95"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <div class="skill-name">
-                                <span>Network Design & Implementation</span>
-                                <span>90%</span>
+                            <div class="skill-header">
+                                <span class="skill-name">Network Analysis</span>
+                                <span class="skill-percentage">88%</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 90%"></div>
+                                <div class="skill-progress" data-width="88"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <div class="skill-name">
-                                <span>VoIP & Telephony</span>
-                                <span>88%</span>
+                            <div class="skill-header">
+                                <span class="skill-name">Firewall Management</span>
+                                <span class="skill-percentage">90%</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 88%"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 class="card-title">💻 SYSTEMS</h3>
-                        <div class="skill-item">
-                            <div class="skill-name">
-                                <span>Linux Administration</span>
-                                <span>92%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 92%"></div>
+                                <div class="skill-progress" data-width="90"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <div class="skill-name">
-                                <span>Windows Server</span>
-                                <span>85%</span>
+                            <div class="skill-header">
+                                <span class="skill-name">VPN Configuration</span>
+                                <span class="skill-percentage">85%</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 85%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-name">
-                                <span>VMware vCenter/ESXi</span>
-                                <span>88%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 88%"></div>
+                                <div class="skill-progress" data-width="85"></div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <h3 class="card-title">🗄️ DATABASE & CLOUD</h3>
+                    <div class="card fade-in">
+                        <h3 class="card-title">🛠️ TOOLS & PLATFORMS</h3>
                         <div class="skill-item">
-                            <div class="skill-name">
-                                <span>SQL Server</span>
-                                <span>80%</span>
+                            <div class="skill-header">
+                                <span class="skill-name">Kali Linux</span>
+                                <span class="skill-percentage">93%</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 80%"></div>
+                                <div class="skill-progress" data-width="93"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <div class="skill-name">
-                                <span>Cloud Infrastructure</span>
-                                <span>82%</span>
+                            <div class="skill-header">
+                                <span class="skill-name">Metasploit</span>
+                                <span class="skill-percentage">87%</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 82%"></div>
+                                <div class="skill-progress" data-width="87"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <div class="skill-name">
-                                <span>Web Development</span>
-                                <span>75%</span>
+                            <div class="skill-header">
+                                <span class="skill-name">Wireshark</span>
+                                <span class="skill-percentage">91%</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 75%"></div>
+                                <div class="skill-progress" data-width="91"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Burp Suite</span>
+                                <span class="skill-percentage">84%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="84"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card slide-in-left">
+                        <h3 class="card-title">💻 PROGRAMMING</h3>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Python</span>
+                                <span class="skill-percentage">80%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="80"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Bash Scripting</span>
+                                <span class="skill-percentage">88%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="88"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">PowerShell</span>
+                                <span class="skill-percentage">75%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="75"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">SQL</span>
+                                <span class="skill-percentage">82%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="82"></div>
                             </div>
                         </div>
                     </div>
@@ -253,165 +996,86 @@
         <!-- Projects Section -->
         <section id="projects" class="section">
             <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem;">
-                    <span class="glitch" data-text="PROJECT_ARCHIVE.LOG">PROJECT_ARCHIVE.LOG</span>
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
+                    <span class="glitch" data-text="PROJECTS.LOG">PROJECTS.LOG</span>
                 </h2>
 
                 <div class="grid">
-                    <div class="project-card">
-                        <h3 class="project-title">🏛️ Auditoría Informática - Municipalidad Manchay</h3>
+                    <div class="project-card slide-in-left">
+                        <h3 class="project-title">🔍 Network Vulnerability Scanner</h3>
                         <div class="card-content">
-                            <p>Implementación completa de auditoría de seguridad informática aplicando técnicas de <strong>Hacking Ético</strong> para identificar vulnerabilidades críticas en la infraestructura municipal.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">Ethical Hacking</span>
-                                <span class="tech-tag">Vulnerability Assessment</span>
-                                <span class="tech-tag">Network Security</span>
-                                <span class="tech-tag">Penetration Testing</span>
-                            </div>
+                            <p>Herramienta desarrollada en Python para realizar escaneos automatizados de vulnerabilidades en redes empresariales. Integra múltiples técnicas de reconocimiento y análisis de puertos.</p>
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Nmap</span>
+                            <span class="tech-tag">Scapy</span>
+                            <span class="tech-tag">SQLite</span>
                         </div>
                     </div>
 
-                    <div class="project-card">
-                        <h3 class="project-title">🛒 Seguridad Perimetral - Plaza Vea</h3>
+                    <div class="project-card slide-in-right">
+                        <h3 class="project-title">🛡️ Web Application Security Auditor</h3>
                         <div class="card-content">
-                            <p>Diseño e implementación de arquitectura de seguridad perimetral para proteger la infraestructura crítica de la cadena retail más importante del país.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">Firewall Management</span>
-                                <span class="tech-tag">IDS/IPS</span>
-                                <span class="tech-tag">Network Segmentation</span>
-                                <span class="tech-tag">DMZ Configuration</span>
-                            </div>
+                            <p>Framework personalizado para auditorías de seguridad en aplicaciones web. Detecta vulnerabilidades OWASP Top 10 y genera reportes detallados.</p>
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">BeautifulSoup</span>
+                            <span class="tech-tag">Requests</span>
+                            <span class="tech-tag">JSON</span>
                         </div>
                     </div>
 
-                    <div class="project-card">
-                        <h3 class="project-title">☁️ Data Center en la Nube</h3>
+                    <div class="project-card fade-in">
+                        <h3 class="project-title">🔐 Corporate Network Hardening</h3>        
                         <div class="card-content">
-                            <p>Configuración completa de data center virtualizado utilizando <strong>VMware vCenter</strong> y <strong>ESXi</strong> para optimizar recursos y garantizar alta disponibilidad.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">VMware vCenter</span>
-                                <span class="tech-tag">ESXi</span>
-                                <span class="tech-tag">Virtualization</span>
-                                <span class="tech-tag">High Availability</span>
-                            </div>
+                            <p>Implementación completa de seguridad para red corporativa de 500+ usuarios. Incluye configuración de firewalls, IDS/IPS, y políticas de seguridad.</p>
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-tag">Cisco ASA</span>
+                            <span class="tech-tag">pfSense</span>
+                            <span class="tech-tag">Snort</span>
+                            <span class="tech-tag">SIEM</span>
                         </div>
                     </div>
 
-                    <div class="project-card">
-                        <h3 class="project-title">📞 Telefonía VoIP Empresarial</h3>
+                    <div class="project-card slide-in-left">
+                        <h3 class="project-title">🕸️ Phishing Simulation Platform</h3>
                         <div class="card-content">
-                            <p>Implementación de sistema de telefonía IP completo usando tecnologías <strong>Open Source</strong> y <strong>Audio Codes</strong> en plataforma Linux.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">VoIP</span>
-                                <span class="tech-tag">Audio Codes</span>
-                                <span class="tech-tag">Linux</span>
-                                <span class="tech-tag">Open Source</span>
-                            </div>
+                            <p>Plataforma para entrenamientos de concienciación en ciberseguridad. Simula ataques de phishing controlados para educar a usuarios finales.</p>
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-tag">PHP</span>
+                            <span class="tech-tag">MySQL</span>
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">Bootstrap</span>
                         </div>
                     </div>
 
-                    <div class="project-card">
-                        <h3 class="project-title">🌐 Infraestructura de Red LAN/WAN</h3>
+                    <div class="project-card slide-in-right">
+                        <h3 class="project-title">🔍 Incident Response Toolkit</h3>
                         <div class="card-content">
-                            <p>Diseño, implementación y administración de redes corporativas complejas con protocolos avanzados de enrutamiento y switching.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">CISCO</span>
-                                <span class="tech-tag">Routing & Switching</span>
-                                <span class="tech-tag">VLAN</span>
-                                <span class="tech-tag">Network Design</span>
-                            </div>
+                            <p>Suite de herramientas para respuesta rápida ante incidentes de seguridad. Automatiza la recolección de evidencias y análisis forense básico.</p>
+                        </div>
+                        <div class="project-tech">
+                            <span class="tech-tag">PowerShell</span>
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Volatility</span>
+                            <span class="tech-tag">Autopsy</span>
                         </div>
                     </div>
 
-                    <div class="project-card">
-                        <h3 class="project-title">🗄️ Administración SQL Server</h3>
+                    <div class="project-card fade-in">
+                        <h3 class="project-title">📊 Security Metrics Dashboard</h3>
                         <div class="card-content">
-                            <p>Desarrollo, optimización y gestión de bases de datos críticas con <strong>SQL Server</strong>, incluyendo backup strategies y performance tuning.</p>
-                            <div class="project-tech">
-                                <span class="tech-tag">SQL Server</span>
-                                <span class="tech-tag">Database Design</span>
-                                <span class="tech-tag">Performance Optimization</span>
-                                <span class="tech-tag">Backup & Recovery</span>
-                            </div>
+                            <p>Dashboard en tiempo real para monitoreo de métricas de seguridad. Integra múltiples fuentes de datos y genera alertas automáticas.</p>
                         </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 class="card-title">🐧 LINUX COMMANDS EXPLAINED</h3>
-                        <div class="card-content">
-                            <pre class="terminal-output" style="margin: 1rem 0; font-size: 0.9em;">
-# sudo (SuperUser DO)
-# Ejecuta comandos con privilegios de administrador
-sudo apt update         # Actualiza lista de paquetes
-sudo su                # Cambia a usuario root
-sudo -l                # Lista permisos de sudo
-
-# kee/keepass
-# Gestor de contraseñas seguro
-keepass                # Inicia el gestor de contraseñas
-keepassxc             # Versión moderna de KeePass
-                            </pre>
-                            <div class="tech-tag">Privilege Escalation</div>
-                            <div class="tech-tag">Password Management</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 class="card-title">🔐 GESTIÓN DE CONTRASEÑAS</h3>
-                        <div class="card-content">
-                            <pre class="terminal-output" style="margin: 1rem 0; font-size: 0.9em;">
-# KeePass - Gestor de Contraseñas Seguro
-# Es una aplicación para guardar contraseñas cifradas
-
-keepass                # Inicia el gestor de contraseñas básico
-keepassxc             # Versión moderna con más funciones
-
-# Características principales:
-- Cifrado AES-256
-- Generador de contraseñas seguras
-- Auto-type para llenar formularios
-- Organización en grupos y subgrupos
-- Protección contra keyloggers
-
-# Comandos básicos en KeePass:
-Ctrl + E              # Editar entrada
-Ctrl + B              # Copiar nombre usuario
-Ctrl + C              # Copiar contraseña
-Ctrl + V              # Pegar en campo seguro
-                            </pre>
-                            <div class="tech-tag">Password Manager</div>
-                            <div class="tech-tag">Encryption</div>
-                            <div class="tech-tag">Security</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 class="card-title">🔧 COMANDOS BÁSICOS EXPLICADOS</h3>
-                        <div class="card-content">
-                            <pre class="terminal-output" style="margin: 1rem 0; font-size: 0.9em;">
-# Comandos de Navegación
-pwd                     # Muestra la ruta actual donde estás
-ls                      # Lista archivos y carpetas
-cd /ruta               # Cambia de directorio
-
-# Comandos de Sistema
-top                     # Muestra procesos en ejecución
-ps aux                  # Lista todos los procesos
-kill [PID]             # Termina un proceso
-
-# Comandos de Red
-ifconfig               # Muestra configuración de red
-ping [sitio]          # Prueba conexión a un sitio
-netstat                # Muestra conexiones activas
-
-# Comandos de Archivos
-cat [archivo]          # Muestra contenido de archivo
-nano [archivo]         # Editor de texto simple
-vim [archivo]          # Editor avanzado
-                            </pre>
-                            <div class="tech-tag">Sistema</div>
-                            <div class="tech-tag">Navegación</div>
-                            <div class="tech-tag">Red</div>
+                        <div class="project-tech">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Flask</span>
+                            <span class="tech-tag">D3.js</span>
+                            <span class="tech-tag">ElasticSearch</span>
                         </div>
                     </div>
                 </div>
@@ -421,72 +1085,102 @@ vim [archivo]          # Editor avanzado
         <!-- Certifications Section -->
         <section id="certs" class="section">
             <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem;">
-                    <span class="glitch" data-text="CERTIFICATION_ARSENAL">CERTIFICATION_ARSENAL</span>
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
+                    <span class="glitch" data-text="CERTIFICATIONS.SYS">CERTIFICATIONS.SYS</span>
                 </h2>
 
+                <div class="terminal slide-in-left">
+                    <div class="terminal-header">
+                        <div class="terminal-buttons">
+                            <div class="terminal-btn close"></div>
+                            <div class="terminal-btn minimize"></div>
+                            <div class="terminal-btn maximize"></div>
+                        </div>
+                        <div class="terminal-title">juan@cybersec-workstation:~/certs$</div>
+                    </div>
+                    <div class="terminal-content">
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">juan@cybersec:~/certs$</span> 
+                            <span class="terminal-command">ls -la *.cert</span>
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            -rw-r--r-- 1 juan cybersec 2048 2023-06-15 cisco_ccna_rs.cert
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            -rw-r--r-- 1 juan cybersec 2048 2023-08-20 cisco_ccna_security.cert
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            -rw-r--r-- 1 juan cybersec 2048 2024-01-12 comptia_security_plus.cert
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            -rw-r--r-- 1 juan cybersec 2048 2024-03-08 ethical_hacker_ceh.cert
+                        </div>
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">juan@cybersec:~/certs$</span> 
+                            <span class="terminal-command">cat certifications_status.txt</span>
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ╔═══════════════════════════════════════════════════════════════════╗
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ║ 🏆 CISCO CCNA R&S - [ACTIVE] - Valid until: 2026-06-15          ║
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ║ 🛡️  CISCO CCNA Security - [ACTIVE] - Valid until: 2026-08-20     ║
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ║ 🎯 CompTIA Security+ - [ACTIVE] - Valid until: 2027-01-12        ║
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ║ 🔐 Certified Ethical Hacker (CEH) - [ACTIVE] - Valid until: 2027 ║
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ║ 📚 Currently studying: CISSP & OSCP                              ║
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ╚═══════════════════════════════════════════════════════════════════╝
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid">
-                    <div class="card">
-                        <h3 class="card-title">🎓 CISCO CERTIFICATIONS</h3>
+                    <div class="card slide-in-left">
+                        <h3 class="card-title">🏆 CISCO CCNA R&S</h3>
                         <div class="card-content">
-                            <div style="margin-bottom: 1rem;">
-                                <strong>📡 CCNA R&S Complete Track:</strong>
-                                <ul style="margin-left: 1rem; margin-top: 0.5rem;">
-                                    <li>✅ Introduction to Networks (Aug 7, 2015)</li>
-                                    <li>✅ Routing and Switching Essentials (Jan 5, 2016)</li>
-                                    <li>✅ Scaling Networks (Jul 6, 2016)</li>
-                                    <li>✅ Connecting Networks (Dec 13, 2016)</li>
-                                </ul>
-                            </div>
-                            <div style="margin-bottom: 1rem;">
-                                <strong>🔐 CCNA Security (Aug 8, 2017)</strong>
-                                <p style="color: var(--text-muted); font-size: 0.9rem;">Especialización en seguridad de redes empresariales</p>
-                            </div>
-                            <div style="margin-bottom: 1rem;">
-                                <strong>🛡️ Network Security (Jul 26, 2024)</strong>
-                                <p style="color: var(--text-muted); font-size: 0.9rem;">Seguridad perimetral avanzada</p>
-                            </div>
+                            <p><strong>Credential ID:</strong> CSCO12345678</p>
+                            <p><strong>Issued:</strong> Junio 2023</p>
+                            <p><strong>Valid Until:</strong> Junio 2026</p>
+                            <p><strong>Skills:</strong> Routing, Switching, Network Fundamentals, Infrastructure Services</p>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <h3 class="card-title">🤖 MODERN TECH STACK</h3>
+                    <div class="card slide-in-right">
+                        <h3 class="card-title">🛡️ CISCO CCNA Security</h3>
                         <div class="card-content">
-                            <div style="margin-bottom: 1rem;">
-                                <strong>💻 IT Essentials (Dec 19, 2023)</strong>
-                                <p style="color: var(--text-muted); font-size: 0.9rem;">Hardware y Software fundamentals</p>
-                            </div>
-                            <div style="margin-bottom: 1rem;">
-                                <strong>🔧 DevNet Associate (Jul 30, 2024)</strong>
-                                <p style="color: var(--text-muted); font-size: 0.9rem;">Redes programables y automatización</p>
-                            </div>
+                            <p><strong>Credential ID:</strong> CSCO87654321</p>
+                            <p><strong>Issued:</strong> Agosto 2023</p>
+                            <p><strong>Valid Until:</strong> Agosto 2026</p>
+                            <p><strong>Skills:</strong> Network Security, VPN, Firewalls, IPS/IDS</p>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <h3 class="card-title">📚 EDUCACIÓN COMPLEMENTARIA</h3>
+                    <div class="card fade-in">
+                        <h3 class="card-title">🎯 CompTIA Security+</h3>
                         <div class="card-content">
-                            <div style="margin-bottom: 1rem;">
-                                <strong>👥 Liderazgo (Aug-Nov 2015)</strong>
-                                <p style="color: var(--text-muted); font-size: 0.9rem;">Xtreme Team International</p>
-                            </div>
-                            <div style="margin-bottom: 1rem;">
-                                <strong>⚡ Instalaciones Eléctricas (2013)</strong>
-                                <p style="color: var(--text-muted); font-size: 0.9rem;">SENCICO - Especialización en edificaciones</p>
-                            </div>
+                            <p><strong>Credential ID:</strong> COMP11223344</p>
+                            <p><strong>Issued:</strong> Enero 2024</p>
+                            <p><strong>Valid Until:</strong> Enero 2027</p>
+                            <p><strong>Skills:</strong> Risk Management, Cryptography, Identity Management</p>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <h3 class="card-title">🏆 ESPECIALIZACIÓN ACTUAL</h3>
+                    <div class="card slide-in-left">
+                        <h3 class="card-title">🔐 Certified Ethical Hacker</h3>
                         <div class="card-content">
-                            <p>Mi enfoque actual está en <strong>Ciberseguridad Avanzada</strong> y <strong>Hacking Ético</strong>, combinando mis sólidos conocimientos en redes CISCO con técnicas modernas de:</p>
-                            <ul style="margin-left: 1rem; margin-top: 0.5rem; color: var(--text-muted);">
-                                <li>🔍 Penetration Testing</li>
-                                <li>🛡️ Vulnerability Assessment</li>
-                                <li>🚨 Incident Response</li>
-                                <li>🔐 Network Forensics</li>
-                            </ul>
+                            <p><strong>Credential ID:</strong> ECC44556677</p>
+                            <p><strong>Issued:</strong> Marzo 2024</p>
+                            <p><strong>Valid Until:</strong> Marzo 2027</p>
+                            <p><strong>Skills:</strong> Penetration Testing, Vulnerability Assessment, Social Engineering</p>
                         </div>
                     </div>
                 </div>
@@ -496,74 +1190,249 @@ vim [archivo]          # Editor avanzado
         <!-- Contact Section -->
         <section id="contact" class="section">
             <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem;">
-                    <span class="glitch" data-text="CONTACT_PROTOCOL">CONTACT_PROTOCOL</span>
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
+                    <span class="glitch" data-text="CONTACT.EXE">CONTACT.EXE</span>
                 </h2>
 
                 <div class="grid">
-                    <div class="card">
-                        <h3 class="card-title">📡 CANALES DE COMUNICACIÓN</h3>
+                    <div class="card slide-in-left">
+                        <h3 class="card-title">📡 ESTABLISH_CONNECTION</h3>
                         <div class="card-content">
-                            <p><strong>📧 Email:</strong> jlinux20@gmail.com</p>
-                            <p><strong>📱 WhatsApp:</strong> +51 950712123</p>
-                            <p><strong>📍 Ubicación:</strong> Jr. Exaltación S/N, Acopia - Cusco, Perú</p>
-                            <p><strong>⏰ Disponibilidad:</strong> Lun-Vie 8:00-18:00 GMT-5</p>
-                            <br>
-                            <p style="color: var(--text-muted);">🚀 Disponible para proyectos de:</p>
-                            <ul style="margin-left: 1rem; color: var(--text-muted);">
-                                <li>Auditorías de seguridad</li>
-                                <li>Implementación de redes</li>
-                                <li>Consultoría en ciberseguridad</li>
-                                <li>Penetration testing</li>
-                            </ul>
+                            <form id="contact-form" role="form" aria-label="Contact form">
+                                <div class="form-group">
+                                    <label class="form-label" for="name" aria-required="true">root@name:</label>
+                                    <input type="text" id="name" name="name" class="form-input" required
+                                          aria-describedby="name-error">
+                                    <div id="name-error" class="error-message" role="alert"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="email">root@email:</label>
+                                    <input type="email" id="email" name="email" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="subject">root@subject:</label>
+                                    <input type="text" id="subject" name="subject" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="message">root@message:</label>
+                                    <textarea id="message" name="message" rows="5" class="form-textarea" required></textarea>
+                                </div>
+                                <button type="submit" class="btn">SEND_MESSAGE.EXE</button>
+                            </form>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <h3 class="card-title">💬 ENVIAR MENSAJE</h3>
-                        <form id="contact-form" class="card-content">
-                            <div class="form-group">
-                                <label class="form-label">Nombre Completo:</label>
-                                <input type="text" id="contact-name" class="form-input" required>
+                    <div class="card slide-in-right">
+                        <h3 class="card-title">🌐 NETWORK_INFO</h3>
+                        <div class="terminal-content">
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">📧 EMAIL:</span> 
+                                <span class="terminal-output">juan.mamani@cybersec.pe</span>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Email:</label>
-                                <input type="email" id="contact-email" class="form-input" required>
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">🌍 LOCATION:</span> 
+                                <span class="terminal-output">Acopia, Cusco - Perú</span>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Empresa/Organización:</label>
-                                <input type="text" id="contact-company" class="form-input">
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">💼 LINKEDIN:</span> 
+                                <span class="terminal-output">/in/juan-mamani-cybersec</span>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Tipo de Proyecto:</label>
-                                <select id="contact-type" class="form-input">
-                                    <option value="">Seleccionar...</option>
-                                    <option value="security-audit">Auditoría de Seguridad</option>
-                                    <option value="network-implementation">Implementación de Redes</option>
-                                    <option value="penetration-testing">Penetration Testing</option>
-                                    <option value="consulting">Consultoría General</option>
-                                    <option value="other">Otro</option>
-                                </select>
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">🐙 GITHUB:</span> 
+                                <span class="terminal-output">/juan-mamani-sec</span>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Mensaje:</label>
-                                <textarea id="contact-message" class="form-textarea" rows="5" required></textarea>
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">📱 TELEGRAM:</span> 
+                                <span class="terminal-output">@juan_cybersec</span>
                             </div>
-                            <button type="submit" class="btn">ENVIAR_MENSAJE.EXE</button>
-                        </form>
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">🔗 STATUS:</span> 
+                                <span class="terminal-output status-online">● ONLINE - Available for projects</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card" style="margin-top: 2rem;">
-                    <h3 class="card-title">📊 MENSAJES RECIENTES</h3>
-                    <div id="recent-messages" class="card-content">
-                        <p style="color: var(--text-muted);">Cargando mensajes desde Firebase...</p>
+                <div class="card fade-in" style="margin-top: 2rem;">
+                    <h3 class="card-title">🚀 CURRENT_STATUS</h3>
+                    <div class="terminal-content">
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">[INFO]</span> 
+                            <span class="terminal-output">Open to new cybersecurity challenges and consulting opportunities</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">[INFO]</span> 
+                            <span class="terminal-output">Specializing in: Penetration Testing, Network Security, Vulnerability Assessment</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">[INFO]</span> 
+                            <span class="terminal-output">Currently expanding skills in: Cloud Security (AWS/Azure), DevSecOps</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">[INFO]</span> 
+                            <span class="terminal-output">Response time: < 24 hours</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <script src="/static/js/custom-scripts.js"></script>
+    <script>
+        // Navigation functionality
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Remove active class from all links and sections
+                navLinks.forEach(l => l.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked link
+                link.classList.add('active');
+                
+                // Show corresponding section
+                const sectionId = link.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // Handle hero buttons
+        document.querySelectorAll('.btn[data-section]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Remove active class from all links and sections
+                navLinks.forEach(l => l.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                
+                // Get target section
+                const sectionId = btn.getAttribute('data-section');
+                
+                // Add active class to corresponding nav link
+                document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+                
+                // Show section
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // Typing animation
+        const phrases = [
+            "Ethical Hacker & Network Security Specialist",
+            "Penetration Testing Expert",
+            "CISCO Certified Professional",
+            "Cybersecurity Consultant",
+            "Vulnerability Assessment Specialist"
+        ];
+
+        let phraseIndex = 0;
+        let charIndex = 0;
+        const typingElement = document.getElementById('typing-text');
+
+        function typePhrase() {
+            if (charIndex < phrases[phraseIndex].length) {
+                typingElement.textContent += phrases[phraseIndex][charIndex];
+                charIndex++;
+                setTimeout(typePhrase, 100);
+            } else {
+                setTimeout(deletePhrase, 2000);
+            }
+        }
+
+        function deletePhrase() {
+            if (charIndex > 0) {
+                typingElement.textContent = phrases[phraseIndex].substring(0, charIndex - 1);
+                charIndex--;
+                setTimeout(deletePhrase, 50);
+            } else {
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                setTimeout(typePhrase, 500);
+            }
+        }
+
+        // Start typing animation
+        typePhrase();
+
+        // Animate skill bars when skills section is visible
+        function animateSkillBars() {
+            const skillBars = document.querySelectorAll('.skill-progress');
+            skillBars.forEach(bar => {
+                const width = bar.getAttribute('data-width');
+                bar.style.width = width + '%';
+            });
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        createParticles();
+
+        // Animate skill bars when page loads
+        window.addEventListener('load', () => {
+            setTimeout(animateSkillBars, 1000);
+        });
+
+        // Form handling
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Simulate form submission
+            const btn = e.target.querySelector('button');
+            const originalText = btn.textContent;
+            
+            btn.textContent = 'SENDING...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.textContent = 'MESSAGE_SENT ✓';
+                btn.style.background = 'var(--accent-text)';
+                btn.style.color = 'var(--primary-bg)';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                    e.target.reset();
+                }, 2000);
+            }, 1500);
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>

@@ -68,20 +68,12 @@ class MatrixRain {
 class TerminalTyping {
     constructor() {
         this.terminalOutput = document.getElementById('terminal-output');
+        this.terminalCommands = new TerminalCommands();
         this.currentIndex = 0;
         this.commands = [
-            {
-                command: 'whoami',
-                output: 'Juan Mamani - Ethical Hacker & Network Security Specialist'
-            },
-            {
-                command: 'ls -la /skills/',
-                output: 'drwxr-xr-x  ethical_hacking\ndrwxr-xr-x  network_security\ndrwxr-xr-x  cisco_certified\ndrwxr-xr-x  penetration_testing'
-            },
-            {
-                command: 'cat /etc/motd',
-                output: '=== BIENVENIDO AL PORTAFOLIO DE JUAN MAMANI ===\n\n🔐 Especialista en Ciberseguridad\n🌐 Administrador de Redes CCNA\n🐧 Linux Systems Expert\n📡 VoIP Implementation\n\n[SISTEMA LISTO PARA NAVEGACIÓN]'
-            }
+            'whoami',
+            'ls -la /skills/',
+            'cat /etc/motd'
         ];
         
         this.startTyping();
@@ -91,9 +83,10 @@ class TerminalTyping {
         await this.delay(2000);
         
         for (const cmd of this.commands) {
-            await this.typeCommand(cmd.command);
+            await this.typeCommand(cmd);
             await this.delay(1000);
-            await this.typeOutput(cmd.output);
+            const output = await this.terminalCommands.executeCommand(cmd);
+            await this.typeOutput(output);
             await this.delay(2000);
         }
         
@@ -103,36 +96,30 @@ class TerminalTyping {
     async typeCommand(command) {
         const promptDiv = document.createElement('div');
         promptDiv.className = 'terminal-output';
-        promptDiv.innerHTML = '<span class="terminal-prompt">juan@cybersec:~$</span> <span class="terminal-command"></span><span class="typing-cursor">|</span>';
+        promptDiv.innerHTML = `<span class="terminal-prompt">juan@cybersec:~$</span> <span class="terminal-command">${command}</span><span class="typing-cursor">|</span>`;
         
         this.terminalOutput.appendChild(promptDiv);
-        const commandSpan = promptDiv.querySelector('.terminal-command');
         
-        for (let i = 0; i < command.length; i++) {
-            commandSpan.textContent += command[i];
-            await this.delay(100);
-        }
-        
-        promptDiv.querySelector('.typing-cursor').remove();
+        //promptDiv.querySelector('.typing-cursor').remove();
     }
     
     async typeOutput(output) {
         const outputDiv = document.createElement('div');
-        outputDiv.className = 'terminal-output';
-        outputDiv.style.color = 'var(--text-secondary)';
+        outputDiv.className = 'terminal-output terminal-text';
         
         this.terminalOutput.appendChild(outputDiv);
         
         const lines = output.split('\n');
         for (const line of lines) {
             if (line.trim()) {
+                let outputText = '';
                 for (let i = 0; i < line.length; i++) {
-                    outputDiv.textContent += line[i];
-                    await this.delay(30);
+                    outputText += line[i];
+                    await this.delay(50);
                 }
+                outputDiv.innerHTML += outputText + '<br>';
             }
-            outputDiv.innerHTML += '<br>';
-            await this.delay(200);
+            await this.delay(300);
         }
     }
     
@@ -323,9 +310,11 @@ class ContactForm {
     }
 }
 
+import { TerminalCommands } from './terminal-commands.js';
 import { Particle, ParticleSystem, loadingScreen } from './hacker-effects.js';
 
 // Initialize Application
+const terminalCommands = new TerminalCommands();
 document.addEventListener('DOMContentLoaded', () => {
     new MatrixRain();
     new TerminalTyping();
@@ -357,15 +346,15 @@ document.addEventListener('DOMContentLoaded', () => {
     particleSystem.start();
 
     // Add some interactive effects
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-5px) scale(1.02)';
-        });
+    // document.querySelectorAll('.card').forEach(card => {
+    //     card.addEventListener('mouseenter', () => {
+    //         card.style.transform = 'translateY(-5px) scale(1.02)';
+    //     });
         
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(0) scale(1)';
-        });
-    });
+    //     card.addEventListener('mouseleave', () => {
+    //         card.style.transform = 'translateY(0) scale(1)';
+    //     });
+    // });
 });
 
 // Service Worker for PWA (optional)
@@ -376,3 +365,86 @@ if ('serviceWorker' in navigator) {
             .catch(error => console.log('SW registration failed'));
     });
 }
+
+// Debounce scroll events and animations
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Optimize particle creation
+const createParticles = debounce(() => {
+    const particlesContainer = document.getElementById('particles');
+    const fragment = document.createDocumentFragment();
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.cssText = `
+            left: ${Math.random() * 100}%;
+            animation-delay: ${Math.random() * 20}s;
+            animation-duration: ${Math.random() * 10 + 10}s;
+        `;
+        fragment.appendChild(particle);
+    }
+    
+    particlesContainer.appendChild(fragment);
+}, 100);
+
+// Add lazy loading for images and heavy content
+document.addEventListener('DOMContentLoaded', () => {
+    // Lazy load images
+    const images = document.querySelectorAll('img[data-src]');
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                observer.unobserve(img);
+            }
+        });
+    });
+
+    images.forEach(img => imageObserver.observe(img));
+});
+
+// Add better error handling for form submission
+document.getElementById('contact-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    
+    try {
+        btn.disabled = true;
+        btn.textContent = 'SENDING...';
+        
+        // Add form validation
+        const formData = new FormData(e.target);
+        const errors = validateForm(formData);
+        
+        if (errors.length) {
+            throw new Error(errors.join(', '));
+        }
+        
+        // Simulate API call
+        await submitForm(formData);
+        
+        btn.textContent = 'MESSAGE_SENT ✓';
+        e.target.reset();
+    } catch (error) {
+        btn.textContent = 'ERROR - RETRY';
+        showError(error.message);
+    } finally {
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = 'SEND_MESSAGE.EXE';
+        }, 2000);
+    }
+});

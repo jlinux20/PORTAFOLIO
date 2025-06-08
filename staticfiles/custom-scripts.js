@@ -118,21 +118,21 @@ class TerminalTyping {
     
     async typeOutput(output) {
         const outputDiv = document.createElement('div');
-        outputDiv.className = 'terminal-output';
-        outputDiv.style.color = 'var(--text-secondary)';
+        outputDiv.className = 'terminal-output terminal-text';
         
         this.terminalOutput.appendChild(outputDiv);
         
         const lines = output.split('\n');
         for (const line of lines) {
             if (line.trim()) {
+                let outputText = '';
                 for (let i = 0; i < line.length; i++) {
-                    outputDiv.textContent += line[i];
-                    await this.delay(30);
+                    outputText += line[i];
+                    await this.delay(50);
                 }
+                outputDiv.innerHTML += outputText + '<br>';
             }
-            outputDiv.innerHTML += '<br>';
-            await this.delay(200);
+            await this.delay(300);
         }
     }
     
@@ -323,23 +323,49 @@ class ContactForm {
     }
 }
 
+import { Particle, ParticleSystem, loadingScreen } from './hacker-effects.js';
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
     new MatrixRain();
     new TerminalTyping();
     new Navigation();
     new ContactForm();
-    
+
+    // Initialize Particle System background effect
+    const particleCanvas = document.createElement('canvas');
+    particleCanvas.id = 'particle-canvas';
+    particleCanvas.style.position = 'fixed';
+    particleCanvas.style.top = '0';
+    particleCanvas.style.left = '0';
+    particleCanvas.style.width = '100%';
+    particleCanvas.style.height = '100%';
+    particleCanvas.style.zIndex = '0';
+    particleCanvas.style.pointerEvents = 'none';
+    document.body.appendChild(particleCanvas);
+
+    const particleSystem = new ParticleSystem(particleCanvas);
+    // Add some particles initially
+    for (let i = 0; i < 50; i++) {
+        const x = Math.random() * particleCanvas.width;
+        const y = Math.random() * particleCanvas.height;
+        const radius = Math.random() * 2 + 1;
+        const color = 'rgba(0, 255, 65, 0.7)';
+        const velocity = { x: (Math.random() - 0.5) * 0.5, y: (Math.random() - 0.5) * 0.5 };
+        particleSystem.addParticle(new Particle(x, y, radius, color, velocity));
+    }
+    particleSystem.start();
+
     // Add some interactive effects
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-5px) scale(1.02)';
-        });
+    // document.querySelectorAll('.card').forEach(card => {
+    //     card.addEventListener('mouseenter', () => {
+    //         card.style.transform = 'translateY(-5px) scale(1.02)';
+    //     });
         
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(0) scale(1)';
-        });
-    });
+    //     card.addEventListener('mouseleave', () => {
+    //         card.style.transform = 'translateY(0) scale(1)';
+    //     });
+    // });
 });
 
 // Service Worker for PWA (optional)
