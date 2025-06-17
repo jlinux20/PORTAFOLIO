@@ -1314,6 +1314,18 @@
                 </div>
             </div>
         </section>
+
+        <!-- Auditoria List Section -->
+        <section id="auditoria-list" class="section">
+            <div class="container">
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
+                    <span class="glitch" data-text="AUDITORIAS.LOG">AUDITORIAS.LOG</span>
+                </h2>
+                <div id="audits-container" class="grid">
+                    <!-- Audits will be loaded here -->
+                </div>
+            </div>
+        </section>
     </main>
 
     <script>
@@ -1335,8 +1347,15 @@
                // Show corresponding section
                const sectionId = link.getAttribute('data-section');
                document.getElementById(sectionId).classList.add('active');
+
+               // Show auditoria list section if auditoria link is clicked
+               if (sectionId === 'auditoria') {
+                   document.getElementById('auditoria-list').classList.add('active');
+               } else {
+                   document.getElementById('auditoria-list').classList.remove('active');
+               }
            });
-       });
+      });
 
         // Handle hero buttons
         document.querySelectorAll('.btn[data-section]').forEach(btn => {
@@ -1355,6 +1374,13 @@
                 
                 // Show section
                 document.getElementById(sectionId).classList.add('active');
+
+                // Show auditoria list section if auditoria link is clicked
+                if (sectionId === 'auditoria') {
+                    document.getElementById('auditoria-list').classList.add('active');
+                } else {
+                    document.getElementById('auditoria-list').classList.remove('active');
+                }
             });
         });
 
@@ -1474,3 +1500,111 @@
     </script>
 </body>
 </html>
+<script>
+        function loadAudits() {
+            fetch('/audits/list/')
+                .then(response => response.json())
+                .then(data => {
+                    const auditsContainer = document.getElementById('audits-container');
+                    auditsContainer.innerHTML = ''; // Clear existing audits
+                    data.audits.forEach(audit => {
+                        const auditCard = document.createElement('div');
+                        auditCard.classList.add('card', 'slide-in-left');
+                        auditCard.innerHTML = `
+                            <h3 class="card-title">${audit.maquina}</h3>
+                            <div class="card-content">
+                                <p><strong>IP:</strong> ${audit.ip}</p>
+                                <p><strong>Vulnerabilidades:</strong> ${audit.vulnerabilidades}</p>
+                                <p><strong>Recomendaciones:</strong> ${audit.recomendaciones}</p>
+                                <p><strong>Timestamp:</strong> ${audit.timestamp}</p>
+                                <button class="btn edit-audit" data-audit-id="${audit.id}">Editar</button>
+                                <button class="btn delete-audit" data-audit-id="${audit.id}">Borrar</button>
+                            </div>
+                        `;
+                        auditsContainer.appendChild(auditCard);
+                    });
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAudits();
+
+            // Form handling
+            document.getElementById('auditoria-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const maquina = document.getElementById('maquina').value;
+                const ip = document.getElementById('ip').value;
+                const vulnerabilidades = document.getElementById('vulnerabilidades').value;
+                const recomendaciones = document.getElementById('recomendaciones').value;
+
+                fetch('/audits/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')  // Function to get CSRF token
+                    },
+                    body: JSON.stringify({
+                        maquina: maquina,
+                        ip: ip,
+                        vulnerabilidades: vulnerabilidades,
+                        recomendaciones: recomendaciones
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Auditoria guardada con éxito!');
+                        loadAudits(); // Reload audits after saving
+                        this.reset(); // Clear the form
+                    } else {
+                        alert('Error al guardar la auditoria: ' + JSON.stringify(data.errors));
+                    }
+                });
+            });
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Add event listeners for edit and delete buttons (example)
+            document.getElementById('audits-container').addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-audit')) {
+                    const auditId = e.target.dataset.auditId;
+                    // Implement delete logic here (fetch request to delete view)
+                    fetch(`/audits/${auditId}/delete/`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert('Auditoria borrada con éxito!');
+                            loadAudits(); // Reload audits after deleting
+                        } else {
+                            alert('Error al borrar la auditoria: ' + JSON.stringify(data.errors));
+                        }
+                    });
+                } else if (e.target.classList.contains('edit-audit')) {
+                    const auditId = e.target.dataset.auditId;
+                    // Implement edit logic here (redirect to edit page or show edit form)
+                    window.location.href = `/audits/${auditId}/`; // Redirect to audit detail page
+                }
+            });
+        });
+    </script>

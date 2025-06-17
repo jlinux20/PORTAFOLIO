@@ -33,3 +33,16 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Message from {self.name}"
+
+class Audit(models.Model):
+    maquina = models.CharField(max_length=100)
+    ip = models.CharField(max_length=20)
+    vulnerabilidades = models.TextField()
+    recomendaciones = models.TextField()
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        return f"Audit of {self.maquina}"
