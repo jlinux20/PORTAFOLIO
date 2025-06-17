@@ -705,6 +705,7 @@
                     <li role="none"><a href="#skills" class="nav-link" role="menuitem" data-section="skills">~/skills</a></li>
                     <li role="none"><a href="#projects" class="nav-link" role="menuitem" data-section="projects">~/projects</a></li>
                     <li role="none"><a href="#certs" class="nav-link" role="menuitem" data-section="certs">~/certs</a></li>
+                    <li role="none"><a href="#auditoria" class="nav-link" role="menuitem" data-section="auditoria">~/auditoria</a></li>
                     <li role="none"><a href="#contact" class="nav-link" role="menuitem" data-section="contact">~/contact</a></li>
                 </ul>
             </nav>
@@ -1276,6 +1277,43 @@
                 </div>
             </div>
         </section>
+
+        <!-- Auditoria Section -->
+        <section id="auditoria" class="section">
+            <div class="container">
+                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
+                    <span class="glitch" data-text="AUDITORIA.EXE">AUDITORIA.EXE</span>
+                </h2>
+                <div class="grid">
+                    <div class="card slide-in-left">
+                        <h3 class="card-title">📝 INGRESE_DATOS</h3>
+                        <div class="card-content">
+                            <form id="auditoria-form" role="form" aria-label="Auditoria form">
+                                <div class="form-group">
+                                    <label class="form-label" for="maquina" aria-required="true">root@maquina:</label>
+                                    <input type="text" id="maquina" name="maquina" class="form-input" required
+                                           aria-describedby="maquina-error">
+                                    <div id="maquina-error" class="error-message" role="alert"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="ip">root@ip:</label>
+                                    <input type="text" id="ip" name="ip" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="vulnerabilidades">root@vulnerabilidades:</label>
+                                    <textarea id="vulnerabilidades" name="vulnerabilidades" rows="5" class="form-textarea" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="recomendaciones">root@recomendaciones:</label>
+                                    <textarea id="recomendaciones" name="recomendaciones" rows="5" class="form-textarea" required></textarea>
+                                </div>
+                                <button type="submit" class="btn">GUARDAR_AUDITORIA.EXE</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <script>
@@ -1294,11 +1332,11 @@
                 // Add active class to clicked link
                 link.classList.add('active');
                 
-                // Show corresponding section
-                const sectionId = link.getAttribute('data-section');
-                document.getElementById(sectionId).classList.add('active');
-            });
-        });
+               // Show corresponding section
+               const sectionId = link.getAttribute('data-section');
+               document.getElementById(sectionId).classList.add('active');
+           });
+       });
 
         // Handle hero buttons
         document.querySelectorAll('.btn[data-section]').forEach(btn => {
