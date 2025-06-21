@@ -9,8 +9,265 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <style>
+    /* Improved Vertical menu styles */
+    .vertical-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh;
+        background: linear-gradient(135deg, #181c24 0%, #1a1f27 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 80px;
+        z-index: 1001;
+        border-right: 2px solid #00ffe7;
+        box-shadow: 2px 0 20px rgba(0, 255, 231, 0.1);
+        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transform: translateX(-100%);
+        backdrop-filter: blur(10px);
+    }
+
+    .vertical-menu.open {
+        transform: translateX(0);
+    }
+
+    .vertical-menu .menu-title {
+        color: var(--accent-text, #00ffe7);
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-bottom: 3rem;
+        letter-spacing: 3px;
+        text-shadow: 0 0 10px rgba(0, 255, 231, 0.5);
+        border-bottom: 1px solid rgba(0, 255, 231, 0.3);
+        padding-bottom: 1rem;
+        width: 80%;
+        text-align: center;
+    }
+
+    .vertical-menu ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0 2rem;
+    }
+
+    .vertical-menu li {
+        width: 100%;
+    }
+
+    .vertical-menu a {
+        display: flex;
+        align-items: center;
+        color: #fff;
+        text-decoration: none;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        position: relative;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+    }
+
+    .vertical-menu a::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--accent-text, #00ffe7), #00d4aa);
+        transition: width 0.3s ease;
+        z-index: -1;
+    }
+
+    .vertical-menu a:hover::before,
+    .vertical-menu a.active::before {
+        width: 100%;
+    }
+
+    .vertical-menu a:hover,
+    .vertical-menu a.active {
+        color: #181c24;
+        transform: translateX(10px);
+        box-shadow: 0 5px 15px rgba(0, 255, 231, 0.3);
+    }
+
+    .vertical-menu a .menu-icon {
+        margin-right: 12px;
+        font-size: 1.2rem;
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Improved hamburger button */
+    .menu-toggle {
+        position: fixed;
+        top: 25px;
+        left: 25px;
+        z-index: 1100;
+        background: linear-gradient(135deg, #181c24, #1a1f27);
+        border: 2px solid var(--accent-text, #00ffe7);
+        color: var(--accent-text, #00ffe7);
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 255, 231, 0.2);
+        backdrop-filter: blur(10px);
+    }
+
+    .menu-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0, 255, 231, 0.4);
+        background: linear-gradient(135deg, var(--accent-text, #00ffe7), #00d4aa);
+        color: #181c24;
+        border-color: #181c24;
+    }
+
+    /* Hamburger lines */
+    .hamburger-line {
+        width: 20px;
+        height: 2px;
+        background: currentColor;
+        transition: all 0.3s ease;
+        border-radius: 2px;
+    }
+
+    .menu-toggle.active .hamburger-line:nth-child(1) {
+        transform: rotate(45deg) translateY(6px);
+    }
+
+    .menu-toggle.active .hamburger-line:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active .hamburger-line:nth-child(3) {
+        transform: rotate(-45deg) translateY(-6px);
+    }
+
+    /* Overlay */
+    .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+    }
+
+    .menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Body adjustments */
+    body {
+        transition: margin-left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 800px) {
+        .vertical-menu {
+            width: 300px;
+            padding-top: 100px;
+        }
+        
+        .menu-toggle {
+            display: flex;
+        }
+    }
+
+    @media (min-width: 801px) {
+        .menu-toggle {
+            display: flex; /* Siempre visible para control total */
+        }
+    }
+
+    /* Close button inside menu */
+    .menu-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: transparent;
+        border: 2px solid var(--accent-text, #00ffe7);
+        color: var(--accent-text, #00ffe7);
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .menu-close:hover {
+        background: var(--accent-text, #00ffe7);
+        color: #181c24;
+        transform: rotate(90deg);
+    }
+    </style>
 </head>
 <body>
+    <!-- Overlay -->
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+    <!-- Botón hamburguesa mejorado -->
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+    </button>
+
+    <!-- Vertical Menu mejorado -->
+    <nav class="vertical-menu" aria-label="Side menu" id="vertical-menu">
+        <button class="menu-close" id="menu-close" aria-label="Close menu">&times;</button>
+        <div class="menu-title">CYBER TOOLS</div>
+        <ul>
+            <li><a href="#" id="menu-tools">
+                <span class="menu-icon">🔧</span>
+                Security Tools
+            </a></li>
+            <li><a href="#" id="menu-scripts">
+                <span class="menu-icon">📝</span>
+                Custom Scripts
+            </a></li>
+            <li><a href="#" id="menu-reports">
+                <span class="menu-icon">📊</span>
+                Audit Reports
+            </a></li>
+            <li><a href="#" id="menu-resources">
+                <span class="menu-icon">📚</span>
+                Resources
+            </a></li>
+            <li><a href="#" id="menu-labs">
+                <span class="menu-icon">🧪</span>
+                Virtual Labs
+            </a></li>
+        </ul>
+    </nav>
     <!-- Animated Background -->
     <div class="animated-bg"></div>
     
@@ -821,9 +1078,162 @@
             observer.observe(el);
         });
     </script>
-</body>
-</html>
-<script>
+    <script>
+    // Improved vertical menu functionality
+    const menuToggle = document.getElementById('menu-toggle');
+    const menuClose = document.getElementById('menu-close');
+    const verticalMenu = document.getElementById('vertical-menu');
+    const menuOverlay = document.getElementById('menu-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        verticalMenu.classList.add('open');
+        menuOverlay.classList.add('active');
+        menuToggle.classList.add('active');
+        body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+    }
+
+    function closeMenu() {
+        verticalMenu.classList.remove('open');
+        menuOverlay.classList.remove('active');
+        menuToggle.classList.remove('active');
+        body.style.overflow = ''; // Restore scrolling
+    }
+
+    // Toggle menu on hamburger click
+    menuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (verticalMenu.classList.contains('open')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    // Close menu on close button click
+    menuClose.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeMenu();
+    });
+
+    // Close menu on overlay click
+    menuOverlay.addEventListener('click', closeMenu);
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!verticalMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+            closeMenu();
+        }
+    });
+
+    // Prevent menu from closing when clicking inside it
+    verticalMenu.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && verticalMenu.classList.contains('open')) {
+            closeMenu();
+        }
+    });
+
+    // Enhanced menu item handlers
+    document.getElementById('menu-tools').addEventListener('click', function(e) {
+        e.preventDefault();
+        closeMenu();
+        // Simulate loading tools section
+        showNotification('🔧 Loading Security Tools...', 'info');
+        setTimeout(() => {
+            showNotification('✅ Security Tools loaded successfully!', 'success');
+        }, 1500);
+    });
+
+    document.getElementById('menu-scripts').addEventListener('click', function(e) {
+        e.preventDefault();
+        closeMenu();
+        showNotification('📝 Opening Custom Scripts Library...', 'info');
+    });
+
+    document.getElementById('menu-reports').addEventListener('click', function(e) {
+        e.preventDefault();
+        closeMenu();
+        // Navigate to auditoria section
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelector('[data-section="auditoria"]').classList.add('active');
+        document.getElementById('auditoria').classList.add('active');
+        document.getElementById('auditoria-list').classList.add('active');
+        showNotification('📊 Navigating to Audit Reports...', 'success');
+    });
+
+    document.getElementById('menu-resources').addEventListener('click', function(e) {
+        e.preventDefault();
+        closeMenu();
+        showNotification('📚 Loading Cybersecurity Resources...', 'info');
+    });
+
+    document.getElementById('menu-labs').addEventListener('click', function(e) {
+        e.preventDefault();
+        closeMenu();
+        showNotification('🧪 Initializing Virtual Lab Environment...', 'info');
+    });
+
+    // Notification system
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span>${message}</span>
+                <button class="notification-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+            </div>
+        `;
+        
+        // Add notification styles if not present
+        if (!document.querySelector('#notification-styles')) {
+            const styles = document.createElement('style');
+            styles.id = 'notification-styles';
+            styles.textContent = `
+                .notification {
+                    position: fixed;
+                    top: 100px;
+                    right: 20px;
+                    z-index: 2000;
+                    padding: 1rem 1.5rem;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 500;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                    transform: translateX(400px);
+                    transition: transform 0.3s ease;
+                    min-width: 300px;
+                    backdrop-filter: blur(10px);
+                }
+                .notification-info { background: linear-gradient(135deg, #00ffe7, #00d4aa); color: #181c24; }
+                .notification-success { background: linear-gradient(135deg, #00ff88, #00cc66); color: #181c24; }
+                .notification-warning { background: linear-gradient(135deg, #ffaa00, #ff8800); color: #181c24; }
+                .notification-error { background: linear-gradient(135deg, #ff4444, #cc0000); }
+                .notification.show { transform: translateX(0); }
+                .notification-content { display: flex; justify-content: space-between; align-items: center; }
+                .notification-close { background: none; border: none; color: inherit; font-size: 1.2rem; cursor: pointer; padding: 0 0 0 1rem; }
+            `;
+            document.head.appendChild(styles);
+        }
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => notification.classList.add('show'), 100);
+        
+        // Auto remove after 4 seconds
+        setTimeout(() => {
+            notification.style.transform = 'translateX(400px)';
+            setTimeout(() => notification.remove(), 300);
+        }, 4000);
+    }
+    </script>
+    <script>
         function loadAudits() {
             fetch('/audits/list/')
                 .then(response => response.json())
@@ -933,3 +1343,4 @@
     </script>
 </body>
 </html>
+`
