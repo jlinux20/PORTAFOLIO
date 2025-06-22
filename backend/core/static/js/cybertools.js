@@ -394,4 +394,29 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicializar el sistema
     initializeMenu();
+
+    // Navigation links handling for main sections
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionId = link.getAttribute('data-section');
+            if (!sectionId) return;
+
+            // Remove active class from all nav links
+            navLinks.forEach(l => l.classList.remove('active'));
+            // Add active class to clicked link
+            link.classList.add('active');
+
+            // Hide all sections
+            const sections = document.querySelectorAll('main.main-content > section.section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Show the selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+        });
+    });
 });

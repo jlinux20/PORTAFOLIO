@@ -70,6 +70,7 @@ TEMPLATES = [
 STATICFILES_DIRS = [
     BASE_DIR / 'src' / 'styles',
     BASE_DIR / 'src' / 'scripts',
+    BASE_DIR / 'backend' / 'core' / 'static',
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
