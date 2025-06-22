@@ -97,5 +97,122 @@ function loadingScreen(container, text = 'LOADING...') {
   };
 }
 
+// Manejo del menú responsive
+document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const overlay = document.querySelector('.menu-overlay');
+
+    menuToggle?.addEventListener('click', () => {
+        menuToggle.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        overlay.classList.toggle('active');
+    });
+
+    overlay?.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+
+    // Efecto de escaneo
+    const cards = document.querySelectorAll('.scan-effect');
+    const startScanObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('scanning');
+                }
+            });
+        },
+        { threshold: 0.5 }
+    );
+
+    cards.forEach(card => startScanObserver.observe(card));
+
+    // Efecto Matrix
+    const createMatrixRain = () => {
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.zIndex = '-1';
+        canvas.style.opacity = '0.05';
+        document.body.prepend(canvas);
+
+        const context = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const rainDrops = Array.from({ length: columns }).fill(1);
+
+        const draw = () => {
+            context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            context.fillStyle = '#0F8';
+            context.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                context.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+
+        setInterval(draw, 30);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    };
+
+    createMatrixRain();
+
+    // Efecto de typing
+    const typingText = document.getElementById('typing-text');
+    if (typingText) {
+        const text = typingText.textContent;
+        typingText.textContent = '';
+        let i = 0;
+
+        const typeWriter = () => {
+            if (i < text.length) {
+                typingText.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        };
+
+        typeWriter();
+    }
+
+    // Efecto de glitch en hover
+    const glitchElements = document.querySelectorAll('.glitch-hover');
+    glitchElements.forEach(element => {
+        element.addEventListener('mouseover', () => {
+            element.classList.add('glitching');
+            setTimeout(() => {
+                element.classList.remove('glitching');
+            }, 1000);
+        });
+    });
+});
+
 // Exportar para usar en otros módulos
 export { Particle, ParticleSystem, loadingScreen };

@@ -312,6 +312,7 @@ class ContactForm {
 
 import { TerminalCommands } from './terminal-commands.js';
 import { Particle, ParticleSystem, loadingScreen } from './hacker-effects.js';
+import visualEffects from './visual-effects-manager';
 
 // Initialize Application
 const terminalCommands = new TerminalCommands();
@@ -356,6 +357,88 @@ document.addEventListener('DOMContentLoaded', () => {
     //     });
     // });
 });
+
+// Initialize effects when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Start visual effects with performance optimization
+    let rafId;
+    const startVisualEffects = () => {
+        if (document.hidden) return;
+        
+        visualEffects.startAll();
+        
+        // Performance optimization for scroll events
+        let lastKnownScrollPosition = 0;
+        let ticking = false;
+
+        const onScroll = () => {
+            lastKnownScrollPosition = window.scrollY;
+            if (!ticking) {
+                rafId = requestAnimationFrame(() => {
+                    // Add scan effect to elements entering viewport
+                    document.querySelectorAll('.card:not(.scanned)').forEach(card => {
+                        const rect = card.getBoundingClientRect();
+                        if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
+                            visualEffects.scanElement(card);
+                            card.classList.add('scanned');
+                        }
+                    });
+                    ticking = false;
+                });
+            }
+            ticking = true;
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+    };
+
+    // Handle visibility changes for performance
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            visualEffects.stopAll();
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+            }
+        } else {
+            startVisualEffects();
+        }
+    });
+
+    // Initialize Intersection Observer for lazy loading effects
+    const observeElements = () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.classList.contains('terminal')) {
+                        visualEffects.scanElement(entry.target);
+                    } else if (entry.target.hasAttribute('data-typewriter')) {
+                        const speed = parseInt(entry.target.dataset.typewriterSpeed) || 50;
+                        const text = entry.target.textContent;
+                        entry.target.textContent = '';
+                        setTimeout(() => {
+                            visualEffects.effects.get('typewriter')?.start(entry.target, text, speed);
+                        }, 500);
+                    }
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.2,
+            rootMargin: '50px'
+        });
+
+        document.querySelectorAll('.terminal, [data-typewriter]').forEach(el => {
+            observer.observe(el);
+        });
+    };
+
+    // Initialize everything
+    startVisualEffects();
+    observeElements();
+});
+
+// Export for use in other modules
+export { visualEffects };
 
 // Service Worker for PWA (optional)
 if ('serviceWorker' in navigator) {

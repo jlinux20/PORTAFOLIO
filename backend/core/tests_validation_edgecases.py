@@ -45,8 +45,8 @@ class ValidationEdgeCaseTests(TestCase):
             'recomendaciones': 'None'
         }
         response = self.client.post(reverse('create_audit'), data)
-        # Actualmente no hay validación, se espera éxito
-        self.assertEqual(response.status_code, 200)
+        # Ahora se espera error 400 por validación
+        self.assertEqual(response.status_code, 400)
 
     def test_contact_whitespace_fields(self):
         data = {

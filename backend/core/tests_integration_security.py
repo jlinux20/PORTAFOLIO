@@ -1,5 +1,12 @@
 from django.test import TestCase, Client
 from django.urls import reverse
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
+
+import django
+django.setup()
+
+from django.test import TestCase
 from backend.core.models import Message, Audit
 import json
 

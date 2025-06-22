@@ -1,11 +1,15 @@
+import logging
+import ipaddress
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from .models import Message
+from .models import Message, Audit
 import json
+
+logger = logging.getLogger(__name__)
 
 def index_view(request):
     return render(request, 'index.html')
@@ -19,9 +23,9 @@ def contact_view(request):
         else:
             data = request.POST.dict()
     except json.JSONDecodeError:
+        logger.error("Invalid JSON in contact_view")
         return JsonResponse({'errors': {'body': 'Invalid JSON'}}, status=400)
 
-    # Validate required fields
     errors = {}
     required_fields = {
         'name': 'Name is required',
@@ -29,12 +33,10 @@ def contact_view(request):
         'message': 'Message is required'
     }
 
-    # Check for missing or empty required fields
     for field, error_message in required_fields.items():
         if not data.get(field, '').strip():
             errors[field] = error_message
 
-    # Validate email format if provided
     if data.get('email'):
         try:
             validate_email(data['email'])
@@ -42,9 +44,9 @@ def contact_view(request):
             errors['email'] = 'Invalid email address'
 
     if errors:
+        logger.info(f"Validation errors in contact_view: {errors}")
         return JsonResponse({'errors': errors}, status=400)
 
-    # Create message
     try:
         message = Message.objects.create(
             name=data['name'].strip(),
@@ -53,38 +55,49 @@ def contact_view(request):
             message_type=data.get('type', 'other').strip(),
             message=data['message'].strip()
         )
+        logger.info(f"Message created with id {message.id}")
         return JsonResponse({
             'status': 'success',
             'message_id': message.id
         })
     except Exception as e:
+        logger.error(f"Error creating message: {e}")
         return JsonResponse({
             'errors': {'server': str(e)}
         }, status=500)
 
 def recent_messages_view(request):
-    messages = Message.objects.order_by('-timestamp')[:10]
-    data = {
-        'messages': [
-            {
-                'name': msg.name,
-                'email': msg.email,
-                'company': msg.company,
-                'message_type': msg.message_type,
-                'message': msg.message,
-                'timestamp': msg.timestamp.isoformat()
-            }
-            for msg in messages
-        ]
-    }
-    return JsonResponse(data)
+    try:
+        page = int(request.GET.get('page', 1))
+        page_size = int(request.GET.get('page_size', 10))
+        start = (page - 1) * page_size
+        end = start + page_size
+        messages = Message.objects.order_by('-timestamp')[start:end]
+        data = {
+            'messages': [
+                {
+                    'name': msg.name,
+                    'email': msg.email,
+                    'company': msg.company,
+                    'message_type': msg.message_type,
+                    'message': msg.message,
+                    'timestamp': msg.timestamp.isoformat()
+                }
+                for msg in messages
+            ],
+            'page': page,
+            'page_size': page_size
+        }
+        logger.info(f"Retrieved messages page {page} with size {page_size}")
+        return JsonResponse(data)
+    except Exception as e:
+        logger.error(f"Error retrieving messages: {e}")
+        return JsonResponse({'errors': {'server': str(e)}}, status=500)
 
 def example_view(request):
     messages = Message.objects.all()
     data = {"messages": [message.name for message in messages]}
     return JsonResponse(data)
-
-from .models import Audit
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -100,32 +113,52 @@ def create_audit_view(request):
         vulnerabilidades = data['vulnerabilidades'].strip()
         recomendaciones = data['recomendaciones'].strip()
 
+        # Validate IP address
+        try:
+            ipaddress.ip_address(ip)
+        except ValueError:
+            logger.info(f"Invalid IP address in create_audit_view: {ip}")
+            return JsonResponse({'errors': {'ip': 'Invalid IP address'}}, status=400)
+
         audit = Audit.objects.create(
             maquina=maquina,
             ip=ip,
             vulnerabilidades=vulnerabilidades,
             recomendaciones=recomendaciones
         )
+        logger.info(f"Audit created with id {audit.id}")
         return JsonResponse({'status': 'success', 'audit_id': audit.id})
     except Exception as e:
+        logger.error(f"Error creating audit: {e}")
         return JsonResponse({'errors': {'server': str(e)}}, status=500)
 
 def list_audits_view(request):
-    audits = Audit.objects.all()
-    data = {
-        'audits': [
-            {
-                'id': audit.id,
-                'maquina': audit.maquina,
-                'ip': audit.ip,
-                'vulnerabilidades': audit.vulnerabilidades,
-                'recomendaciones': audit.recomendaciones,
-                'timestamp': audit.timestamp.isoformat()
-            }
-            for audit in audits
-        ]
-    }
-    return JsonResponse(data)
+    try:
+        page = int(request.GET.get('page', 1))
+        page_size = int(request.GET.get('page_size', 10))
+        start = (page - 1) * page_size
+        end = start + page_size
+        audits = Audit.objects.all().order_by('-timestamp')[start:end]
+        data = {
+            'audits': [
+                {
+                    'id': audit.id,
+                    'maquina': audit.maquina,
+                    'ip': audit.ip,
+                    'vulnerabilidades': audit.vulnerabilidades,
+                    'recomendaciones': audit.recomendaciones,
+                    'timestamp': audit.timestamp.isoformat()
+                }
+                for audit in audits
+            ],
+            'page': page,
+            'page_size': page_size
+        }
+        logger.info(f"Retrieved audits page {page} with size {page_size}")
+        return JsonResponse(data)
+    except Exception as e:
+        logger.error(f"Error retrieving audits: {e}")
+        return JsonResponse({'errors': {'server': str(e)}}, status=500)
 
 def get_audit_view(request, audit_id):
     try:
@@ -138,8 +171,10 @@ def get_audit_view(request, audit_id):
             'recomendaciones': audit.recomendaciones,
             'timestamp': audit.timestamp.isoformat()
         }
+        logger.info(f"Retrieved audit with id {audit_id}")
         return JsonResponse(data)
     except Audit.DoesNotExist:
+        logger.info(f"Audit not found with id {audit_id}")
         return JsonResponse({'errors': {'server': 'Audit not found'}}, status=404)
 
 @csrf_exempt
@@ -153,14 +188,26 @@ def update_audit_view(request, audit_id):
             data = request.POST.dict()
 
         audit.maquina = data['maquina'].strip()
-        audit.ip = data['ip'].strip()
+        ip = data['ip'].strip()
+
+        # Validate IP address
+        try:
+            ipaddress.ip_address(ip)
+        except ValueError:
+            logger.info(f"Invalid IP address in update_audit_view: {ip}")
+            return JsonResponse({'errors': {'ip': 'Invalid IP address'}}, status=400)
+
+        audit.ip = ip
         audit.vulnerabilidades = data['vulnerabilidades'].strip()
         audit.recomendaciones = data['recomendaciones'].strip()
         audit.save()
+        logger.info(f"Updated audit with id {audit_id}")
         return JsonResponse({'status': 'success', 'audit_id': audit.id})
     except Audit.DoesNotExist:
+        logger.info(f"Audit not found with id {audit_id}")
         return JsonResponse({'errors': {'server': 'Audit not found'}}, status=404)
     except Exception as e:
+        logger.error(f"Error updating audit {audit_id}: {e}")
         return JsonResponse({'errors': {'server': str(e)}}, status=500)
 
 @csrf_exempt
@@ -169,8 +216,11 @@ def delete_audit_view(request, audit_id):
     try:
         audit = Audit.objects.get(pk=audit_id)
         audit.delete()
+        logger.info(f"Deleted audit with id {audit_id}")
         return JsonResponse({'status': 'success'})
     except Audit.DoesNotExist:
+        logger.info(f"Audit not found with id {audit_id}")
         return JsonResponse({'errors': {'server': 'Audit not found'}}, status=404)
     except Exception as e:
+        logger.error(f"Error deleting audit {audit_id}: {e}")
         return JsonResponse({'errors': {'server': str(e)}}, status=500)

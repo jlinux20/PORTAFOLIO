@@ -219,14 +219,18 @@ function showContent(contentKey) {
     const mainContent = document.querySelector('.main-content');
     if (!mainContent) return;
 
+    // Remove existing cybertools container if any to avoid stacking content
+    let existingContainer = document.getElementById('cybertools-container');
+    if (existingContainer) {
+        existingContainer.remove();
+    }
+
     if (pageContent[contentKey]) {
         // Insertar contenido Cyber Tools en un contenedor específico para evitar borrar todo el main
-        let cybertoolsContainer = document.getElementById('cybertools-container');
-        if (!cybertoolsContainer) {
-            cybertoolsContainer = document.createElement('div');
-            cybertoolsContainer.id = 'cybertools-container';
-            mainContent.appendChild(cybertoolsContainer);
-        }
+        let cybertoolsContainer = document.createElement('div');
+        cybertoolsContainer.id = 'cybertools-container';
+        mainContent.appendChild(cybertoolsContainer);
+
         cybertoolsContainer.innerHTML = pageContent[contentKey];
         
         // Inicializar funcionalidades específicas
@@ -245,6 +249,131 @@ function initializeScriptsPage() {
     
     // Cargar scripts existentes
     loadScriptsList();
+}
+
+// Nueva función para editar script
+function startEditScript(id) {
+    const scripts = storage.getScripts();
+    const script = scripts.find(s => s.id === id);
+    if (!script) return;
+
+    // Rellenar formulario con datos del script
+    document.getElementById('script-name').value = script.name;
+    document.getElementById('script-type').value = script.type;
+    document.getElementById('script-commands').value = script.commands;
+    document.getElementById('script-url').value = script.url;
+    document.getElementById('script-serial').value = script.serial;
+    document.getElementById('script-description').value = script.description;
+
+    // Cambiar botón para guardar a modo edición
+    const form = document.getElementById('script-form');
+    if (!form) return;
+    form.dataset.editingId = id;
+    form.querySelector('button[type="submit"]').textContent = '💾 Guardar Cambios';
+
+    // Mostrar botón cancelar edición
+    let cancelBtn = document.getElementById('cancel-script-edit');
+    if (!cancelBtn) {
+        cancelBtn = document.createElement('button');
+        cancelBtn.id = 'cancel-script-edit';
+        cancelBtn.type = 'button';
+        cancelBtn.textContent = 'Cancelar';
+        cancelBtn.className = 'btn secondary';
+        cancelBtn.style.marginLeft = '1rem';
+        form.appendChild(cancelBtn);
+        cancelBtn.addEventListener('click', cancelEditScript);
+    } else {
+        cancelBtn.style.display = 'inline-block';
+    }
+}
+
+function cancelEditScript() {
+    const form = document.getElementById('script-form');
+    if (!form) return;
+    form.reset();
+    delete form.dataset.editingId;
+    form.querySelector('button[type="submit"]').textContent = '💾 Guardar Script';
+    const cancelBtn = document.getElementById('cancel-script-edit');
+    if (cancelBtn) {
+        cancelBtn.style.display = 'none';
+    }
+}
+
+function handleScriptSubmit(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const editingId = form.dataset.editingId;
+
+    const script = {
+        name: document.getElementById('script-name').value.trim(),
+        type: document.getElementById('script-type').value,
+        commands: document.getElementById('script-commands').value.trim(),
+        url: document.getElementById('script-url').value.trim(),
+        serial: document.getElementById('script-serial').value.trim(),
+        description: document.getElementById('script-description').value.trim()
+    };
+
+    // Simple validation
+    if (!script.name) {
+        alert('El nombre del script es obligatorio.');
+        return;
+    }
+
+    if (editingId) {
+        // Edit existing script
+        const scripts = storage.getScripts();
+        const index = scripts.findIndex(s => s.id === Number(editingId));
+        if (index !== -1) {
+            scripts[index] = {
+                ...scripts[index],
+                ...script,
+                id: scripts[index].id,
+                created: scripts[index].created
+            };
+            storage.data.scripts = scripts;
+            storage.saveData();
+            showNotification('Script actualizado exitosamente!');
+        }
+        cancelEditScript();
+    } else {
+        // Add new script
+        storage.addScript(script);
+        showNotification('Script guardado exitosamente!');
+    }
+
+    form.reset();
+    loadScriptsList();
+}
+
+function loadScriptsList() {
+    const container = document.getElementById('scripts-container');
+    if (!container) return;
+
+    const scripts = storage.getScripts();
+
+    if (scripts.length === 0) {
+        container.innerHTML = '<p class="no-scripts">No hay scripts guardados</p>';
+        return;
+    }
+
+    container.innerHTML = scripts.map(script => `
+        <div class="script-item" data-id="${script.id}">
+            <div class="script-header">
+                <h4>${script.name}</h4>
+                <span class="script-type">${script.type}</span>
+                <button onclick="startEditScript(${script.id})" class="edit-btn">✏️</button>
+                <button onclick="deleteScript(${script.id})" class="delete-btn">🗑️</button>
+            </div>
+            <div class="script-content">
+                <p><strong>Descripción:</strong> ${script.description}</p>
+                ${script.commands ? `<div class="commands"><strong>Comandos:</strong><pre>${script.commands}</pre><button onclick="copyToClipboard('${script.commands.replace(/'/g, "\\'")}')">📋 Copiar</button></div>` : ''}
+                ${script.url ? `<p><strong>URL:</strong> <a href="${script.url}" target="_blank">${script.url}</a></p>` : ''}
+                ${script.serial ? `<p><strong>Serial:</strong> <code>${script.serial}</code> <button onclick="copyToClipboard('${script.serial}')">📋</button></p>` : ''}
+                <small>Creado: ${new Date(script.created).toLocaleString()}</small>
+            </div>
+        </div>
+    `).join('');
 }
 
 function handleScriptSubmit(e) {
@@ -412,6 +541,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const sections = document.querySelectorAll('main.main-content > section.section');
             sections.forEach(section => section.classList.remove('active'));
 
+            // Remove cybertools container if present to avoid content overlap
+            const cybertoolsContainer = document.getElementById('cybertools-container');
+            if (cybertoolsContainer) {
+                cybertoolsContainer.remove();
+            }
+
             // Show the selected section
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
@@ -532,6 +667,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     auditForm.addEventListener('submit', (e) => {
         e.preventDefault();
+
+        // Clear previous errors
+        clearAuditFormErrors();
+
         const formData = {
             maquina: auditForm.maquina.value.trim(),
             ip: auditForm.ip.value.trim(),
@@ -540,35 +679,95 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         const auditId = auditForm['audit-id'].value;
 
-        let url = '/create_audit/';
+        // Client-side validation
+        let hasError = false;
+        if (!formData.maquina) {
+            showAuditFormError('maquina', 'El campo Máquina es obligatorio.');
+            hasError = true;
+        }
+        if (!formData.ip) {
+            showAuditFormError('ip', 'El campo IP es obligatorio.');
+            hasError = true;
+        } else if (!validateIP(formData.ip)) {
+            showAuditFormError('ip', 'Formato de IP inválido.');
+            hasError = true;
+        }
+        if (!formData.vulnerabilidades) {
+            showAuditFormError('vulnerabilidades', 'El campo Vulnerabilidades es obligatorio.');
+            hasError = true;
+        }
+        if (!formData.recomendaciones) {
+            showAuditFormError('recomendaciones', 'El campo Recomendaciones es obligatorio.');
+            hasError = true;
+        }
+        if (hasError) return;
+
+        let url = '/audits/create/';
         let method = 'POST';
         if (auditId) {
             url = `/${auditId}/update/`;
             method = 'PUT';
         }
 
-        fetch('/audits/create/', {
+        // Show loading indicator
+        setAuditFormLoading(true);
+
+        fetch(url, {
             method: method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         })
         .then(response => response.json())
         .then(data => {
+            setAuditFormLoading(false);
             if (data.status === 'success') {
-                alert('Auditoría guardada correctamente');
+                showNotification('Auditoría guardada correctamente');
                 auditForm.reset();
                 auditForm['audit-id'].value = '';
                 cancelEditBtn.style.display = 'none';
                 editAuditId = null;
                 fetchAudits();
             } else if (data.errors) {
-                alert('Error: ' + JSON.stringify(data.errors));
+                Object.entries(data.errors).forEach(([field, message]) => {
+                    showAuditFormError(field, message);
+                });
             }
         })
         .catch(error => {
-            console.error('Error saving audit:', error, 'Response status:', error.response ? error.response.status : 'N/A', 'Response text:', error.response ? error.response.statusText : 'N/A');
+            setAuditFormLoading(false);
+            console.error('Error saving audit:', error);
+            showNotification('Error al guardar la auditoría. Intente nuevamente.');
         });
     });
+
+    function showAuditFormError(field, message) {
+        const input = auditForm[field];
+        if (!input) return;
+        let errorElem = input.nextElementSibling;
+        if (!errorElem || !errorElem.classList.contains('error-message')) {
+            errorElem = document.createElement('div');
+            errorElem.className = 'error-message';
+            input.parentNode.insertBefore(errorElem, input.nextSibling);
+        }
+        errorElem.textContent = message;
+    }
+
+    function clearAuditFormErrors() {
+        const errors = auditForm.querySelectorAll('.error-message');
+        errors.forEach(e => e.remove());
+    }
+
+    function setAuditFormLoading(isLoading) {
+        const submitBtn = auditForm.querySelector('button[type="submit"]');
+        if (!submitBtn) return;
+        submitBtn.disabled = isLoading;
+        submitBtn.textContent = isLoading ? 'Guardando...' : (auditForm['audit-id'].value ? 'Guardar Cambios' : 'Guardar Auditoría');
+    }
+
+    function validateIP(ip) {
+        const ipRegex = /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/;
+        return ipRegex.test(ip);
+    }
 
     cancelEditBtn.addEventListener('click', () => {
         auditForm.reset();

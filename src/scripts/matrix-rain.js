@@ -1,58 +1,92 @@
 // matrix-rain.js - vanilla JS matrix rain effect
 
-(function() {
-  const canvas = document.createElement('canvas');
-  canvas.id = 'matrix-canvas';
-  canvas.style.position = 'fixed';
-  canvas.style.top = '0';
-  canvas.style.left = '0';
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-  canvas.style.zIndex = '-1';
-  canvas.style.backgroundColor = 'black';
-  document.body.appendChild(canvas);
-
-  const ctx = canvas.getContext('2d');
-
-  let width = window.innerWidth;
-  let height = window.innerHeight;
-  canvas.width = width;
-  canvas.height = height;
-
-  const letters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const fontSize = 16;
-  const columns = Math.floor(width / fontSize);
-  const drops = new Array(columns).fill(1);
-
-  function draw() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-    ctx.fillRect(0, 0, width, height);
-
-    ctx.fillStyle = '#0F0';
-    ctx.font = fontSize + 'px monospace';
-
-    for (let i = 0; i < drops.length; i++) {
-      const text = letters.charAt(Math.floor(Math.random() * letters.length));
-      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-      if (drops[i] * fontSize > height && Math.random() > 0.975) {
-        drops[i] = 0;
-      }
-      drops[i]++;
+class MatrixRain {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.resizeCanvas();
+        this.setupCharacters();
+        this.setupColumns();
+        
+        window.addEventListener('resize', () => this.resizeCanvas());
     }
-  }
 
-  function animate() {
-    draw();
-    requestAnimationFrame(animate);
-  }
+    resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.setupColumns();
+    }
 
-  animate();
+    setupCharacters() {
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+        this.characters = katakana + latin + nums + symbols;
+    }
 
-  window.addEventListener('resize', () => {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-  });
-})();
+    setupColumns() {
+        const fontSize = 16;
+        const columns = Math.ceil(this.canvas.width / fontSize);
+        this.drops = new Array(columns).fill(1);
+        this.fontSize = fontSize;
+    }
+
+    getRandomChar() {
+        return this.characters[Math.floor(Math.random() * this.characters.length)];
+    }
+
+    draw() {
+        // Semi-transparent black background for trail effect
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Green text
+        this.ctx.fillStyle = '#0F8';
+        this.ctx.font = this.fontSize + 'px monospace';
+
+        // Draw each character
+        for (let i = 0; i < this.drops.length; i++) {
+            const text = this.getRandomChar();
+            const x = i * this.fontSize;
+            const y = this.drops[i] * this.fontSize;
+
+            // Add random brightness effect
+            const brightness = Math.random();
+            this.ctx.fillStyle = `rgba(0, 255, ${Math.floor(brightness * 100) + 100}, ${brightness})`;
+            
+            this.ctx.fillText(text, x, y);
+
+            // Reset drop when it reaches bottom or randomly
+            if (y > this.canvas.height && Math.random() > 0.975) {
+                this.drops[i] = 0;
+            }
+
+            this.drops[i]++;
+        }
+    }
+
+    start() {
+        if (!this._animationFrame) {
+            const animate = () => {
+                this.draw();
+                this._animationFrame = requestAnimationFrame(animate);
+            };
+            animate();
+        }
+    }
+
+    stop() {
+        if (this._animationFrame) {
+            cancelAnimationFrame(this._animationFrame);
+            this._animationFrame = null;
+        }
+    }
+
+    setOpacity(opacity) {
+        this.canvas.style.opacity = opacity;
+    }
+}
+
+// Export the MatrixRain class
+export default MatrixRain;
