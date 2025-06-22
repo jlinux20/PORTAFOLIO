@@ -445,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let editAuditId = null;
 
     function fetchAudits() {
-        fetch('/list_audits/')
+        fetch('/audits/list/')
             .then(response => response.json())
             .then(data => {
                 displayAudits(data.audits);
@@ -494,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function startEditAudit(id) {
-        fetch(`/get_audit/${id}/`)
+        fetch(`/${id}/`)
             .then(response => response.json())
             .then(data => {
                 if (data.errors) {
@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function deleteAudit(id) {
         if (!confirm('¿Está seguro de eliminar esta auditoría?')) return;
-        fetch(`/delete_audit/${id}/`, { method: 'DELETE' })
+        fetch(`/${id}/delete/`, { method: 'DELETE' })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
@@ -543,11 +543,11 @@ document.addEventListener('DOMContentLoaded', function() {
         let url = '/create_audit/';
         let method = 'POST';
         if (auditId) {
-            url = `/update_audit/${auditId}/`;
+            url = `/${auditId}/update/`;
             method = 'PUT';
         }
 
-        fetch(url, {
+        fetch('/audits/create/', {
             method: method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
@@ -566,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
-            console.error('Error saving audit:', error);
+            console.error('Error saving audit:', error, 'Response status:', error.response ? error.response.status : 'N/A', 'Response text:', error.response ? error.response.statusText : 'N/A');
         });
     });
 

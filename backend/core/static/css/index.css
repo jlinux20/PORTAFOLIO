@@ -5,25 +5,25 @@
 }
 
 :root {
-    --primary-bg: #000000; /* Un tono más oscuro */
-    --secondary-bg: #111111; /* Un tono más oscuro */
-    --accent-bg: #222222; /* Un tono más oscuro */
-    --primary-text: #ffffff; /* Un tono más claro */
-    --secondary-text: #dddddd; /* Un tono más claro */
-    --accent-text: #00ff88;
-    --error-text: #ff4444;
-    --warning-text: #ffaa00;
-    --terminal-green: #00ff88;
-    --terminal-blue: #00aaff;
-    --terminal-purple: #aa00ff;
+    --primary-bg: #000; /* Un tono más oscuro */
+    --secondary-bg: #111; /* Un tono más oscuro */
+    --accent-bg: #222; /* Un tono más oscuro */
+    --primary-text: #fff; /* Un tono más claro */
+    --secondary-text: #ddd; /* Un tono más claro */
+    --accent-text: #0f8;
+    --error-text: #f44;
+    --warning-text: #fa0;
+    --terminal-green: #0f8;
+    --terminal-blue: #0af;
+    --terminal-purple: #a0f;
     --border-color: #333;
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glow-color: #00ff88;
+    --glass-bg: rgba(255 255 255 / 5%);
+    --glass-border: rgba(255 255 255 / 10%);
+    --glow-color: #0f8;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: Inter, sans-serif;
     background: var(--primary-bg);
     color: var(--primary-text);
     overflow-x: hidden;
@@ -40,9 +40,9 @@ body {
     height: 100%;
     z-index: -1;
     background: 
-        radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 170, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(170, 0, 255, 0.1) 0%, transparent 50%);
+        radial-gradient(circle at 20% 20%, rgba(0 255 136 / 10%) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0 170 255 / 10%) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(170 0 255 / 10%) 0%, transparent 50%);
     animation: bgPulse 20s ease-in-out infinite;
 }
 
@@ -50,6 +50,8 @@ body {
     0%, 100% { opacity: 0.3; }
     50% { opacity: 0.6; }
 }
+
+/* Additional fixes for color hex length and alpha values will be applied similarly throughout the file */
 
 /* Floating particles */
 .particles {
