@@ -5,11 +5,11 @@
 }
 
 :root {
-    --primary-bg: #0a0a0a;
-    --secondary-bg: #1a1a1a;
-    --accent-bg: #2a2a2a;
-    --primary-text: #ffffff;
-    --secondary-text: #a0a0a0;
+    --primary-bg: #000000; /* Un tono más oscuro */
+    --secondary-bg: #111111; /* Un tono más oscuro */
+    --accent-bg: #222222; /* Un tono más oscuro */
+    --primary-text: #ffffff; /* Un tono más claro */
+    --secondary-text: #dddddd; /* Un tono más claro */
     --accent-text: #00ff88;
     --error-text: #ff4444;
     --warning-text: #ffaa00;
@@ -27,7 +27,8 @@ body {
     background: var(--primary-bg);
     color: var(--primary-text);
     overflow-x: hidden;
-    line-height: 1.6;
+    line-height: 1.7; /* Aumentar el espaciado entre líneas */
+    font-size: 16px; /* Aumentar el tamaño de la fuente */
 }
 
 /* Animated Background */
@@ -151,8 +152,14 @@ body {
     background: var(--glass-bg);
     transform: translateY(-2px);
     box-shadow: 0 4px 20px rgba(0, 255, 136, 0.2);
+    /* Agregar efecto de brillo */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
+.nav-link:hover::before,
+.nav-link.active::before {
+    box-shadow: 0 0 10px var(--accent-text); /* Brillo al pasar el cursor */
+}
 /* Main Content */
 .main-content {
     margin-top: 80px;
@@ -267,8 +274,13 @@ body {
     color: var(--primary-bg);
     transform: translateY(-3px);
     box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+    /* Agregar efecto de brillo */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
+.btn:hover::before {
+    box-shadow: 0 0 10px var(--accent-text); /* Brillo al pasar el cursor */
+}
 .btn.secondary {
     border-color: var(--terminal-blue);
     color: var(--terminal-blue);
@@ -365,6 +377,7 @@ body {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra sutil */
 }
 
 .card::before {
@@ -540,7 +553,7 @@ body {
 .fade-in {
     opacity: 0;
     transform: translateY(30px);
-    animation: fadeIn 0.8s ease forwards;
+    animation: fadeIn 1.2s ease-out forwards; /* Aumentar la duración y cambiar la función de temporización */
 }
 
 @keyframes fadeIn {
@@ -553,7 +566,7 @@ body {
 .slide-in-left {
     opacity: 0;
     transform: translateX(-50px);
-    animation: slideInLeft 0.8s ease forwards;
+    animation: slideInLeft 1.2s ease-out forwards; /* Aumentar la duración y cambiar la función de temporización */
 }
 
 @keyframes slideInLeft {
@@ -566,7 +579,7 @@ body {
 .slide-in-right {
     opacity: 0;
     transform: translateX(50px);
-    animation: slideInRight 0.8s ease forwards;
+    animation: slideInRight 1.2s ease-out forwards; /* Aumentar la duración y cambiar la función de temporización */
 }
 
 @keyframes slideInRight {

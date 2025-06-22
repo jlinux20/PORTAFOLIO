@@ -196,3 +196,64 @@ button[type="submit"]:hover,
     font-style: italic;
     padding: 40px;
 }
+
+/* Audit Reports Section */
+#audit-reports .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#audit-reports h1 {
+    color: var(--accent-text, #00ffe7);
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.audit-report-container {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 231, 0.2);
+    margin-bottom: 20px;
+}
+
+.audit-report-container h2 {
+    color: var(--accent-text, #00ffe7);
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.audit-button {
+    background: linear-gradient(135deg, #66ff66, #00cc00);
+    color: #181c24;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.audit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 255, 231, 0.4);
+}
+
+.audit-button .menu-icon {
+    margin-right: 5px;
+}
+
+/* #auditoria {
+    display: none;
+}
+
+#auditoria-list {
+    display: none;
+}
+
+#audit-reports {
+    display: block;
+}

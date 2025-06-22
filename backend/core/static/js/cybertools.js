@@ -419,4 +419,164 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Activate section based on URL hash on page load
+    const hash = window.location.hash.substring(1); // remove #
+    if (hash) {
+        const targetSection = document.getElementById(hash);
+        const targetNavLink = Array.from(navLinks).find(link => link.getAttribute('data-section') === hash);
+        if (targetSection && targetNavLink) {
+            // Remove active from all nav links and sections
+            navLinks.forEach(l => l.classList.remove('active'));
+            const sections = document.querySelectorAll('main.main-content > section.section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Add active to target nav link and section
+            targetNavLink.classList.add('active');
+            targetSection.classList.add('active');
+        }
+    }
+
+    // Audit form and list handling
+    const auditForm = document.getElementById('audit-form');
+    const auditList = document.getElementById('audit-list');
+    const cancelEditBtn = document.getElementById('cancel-edit');
+
+    let editAuditId = null;
+
+    function fetchAudits() {
+        fetch('/list_audits/')
+            .then(response => response.json())
+            .then(data => {
+                displayAudits(data.audits);
+            })
+            .catch(error => {
+                console.error('Error fetching audits:', error);
+            });
+    }
+
+    function displayAudits(audits) {
+        if (!auditList) return;
+        if (audits.length === 0) {
+            auditList.innerHTML = '<p>No hay auditorías registradas.</p>';
+            return;
+        }
+        auditList.innerHTML = '';
+        audits.forEach(audit => {
+            const card = document.createElement('div');
+            card.className = 'card fade-in';
+            card.style.marginBottom = '1rem';
+            card.innerHTML = `
+                <h3>Máquina: ${audit.maquina}</h3>
+                <p><strong>IP:</strong> ${audit.ip}</p>
+                <p><strong>Vulnerabilidades:</strong> ${audit.vulnerabilidades}</p>
+                <p><strong>Recomendaciones:</strong> ${audit.recomendaciones}</p>
+                <p><small>Fecha: ${new Date(audit.timestamp).toLocaleString()}</small></p>
+                <button class="btn" data-id="${audit.id}" data-action="edit">Editar</button>
+                <button class="btn secondary" data-id="${audit.id}" data-action="delete" style="margin-left: 1rem;">Eliminar</button>
+            `;
+            auditList.appendChild(card);
+        });
+
+        // Add event listeners for edit and delete buttons
+        auditList.querySelectorAll('button[data-action="edit"]').forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.getAttribute('data-id');
+                startEditAudit(id);
+            });
+        });
+        auditList.querySelectorAll('button[data-action="delete"]').forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.getAttribute('data-id');
+                deleteAudit(id);
+            });
+        });
+    }
+
+    function startEditAudit(id) {
+        fetch(`/get_audit/${id}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.errors) {
+                    alert('Error al obtener auditoría: ' + data.errors.server);
+                    return;
+                }
+                editAuditId = id;
+                auditForm.maquina.value = data.maquina;
+                auditForm.ip.value = data.ip;
+                auditForm.vulnerabilidades.value = data.vulnerabilidades;
+                auditForm.recomendaciones.value = data.recomendaciones;
+                auditForm['audit-id'].value = id;
+                cancelEditBtn.style.display = 'inline-block';
+            })
+            .catch(error => {
+                console.error('Error fetching audit:', error);
+            });
+    }
+
+    function deleteAudit(id) {
+        if (!confirm('¿Está seguro de eliminar esta auditoría?')) return;
+        fetch(`/delete_audit/${id}/`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    fetchAudits();
+                } else {
+                    alert('Error al eliminar auditoría');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting audit:', error);
+            });
+    }
+
+    auditForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = {
+            maquina: auditForm.maquina.value.trim(),
+            ip: auditForm.ip.value.trim(),
+            vulnerabilidades: auditForm.vulnerabilidades.value.trim(),
+            recomendaciones: auditForm.recomendaciones.value.trim()
+        };
+        const auditId = auditForm['audit-id'].value;
+
+        let url = '/create_audit/';
+        let method = 'POST';
+        if (auditId) {
+            url = `/update_audit/${auditId}/`;
+            method = 'PUT';
+        }
+
+        fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Auditoría guardada correctamente');
+                auditForm.reset();
+                auditForm['audit-id'].value = '';
+                cancelEditBtn.style.display = 'none';
+                editAuditId = null;
+                fetchAudits();
+            } else if (data.errors) {
+                alert('Error: ' + JSON.stringify(data.errors));
+            }
+        })
+        .catch(error => {
+            console.error('Error saving audit:', error);
+        });
+    });
+
+    cancelEditBtn.addEventListener('click', () => {
+        auditForm.reset();
+        auditForm['audit-id'].value = '';
+        cancelEditBtn.style.display = 'none';
+        editAuditId = null;
+    });
+
+    // Initial fetch of audits
+    fetchAudits();
 });

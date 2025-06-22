@@ -249,6 +249,8 @@
     <nav class="vertical-menu" aria-label="Side menu" id="vertical-menu">
         <button class="menu-close" id="menu-close" aria-label="Close menu">&times;</button>
         <div class="menu-title">CYBER TOOLS</div>
+
+        <div class="menu-section">Main Tools</div>
         <ul>
             <li><a href="#" id="menu-tools">
                 <span class="menu-icon">🔧</span>
@@ -262,6 +264,10 @@
                 <span class="menu-icon">📊</span>
                 Audit Reports
             </a></li>
+        </ul>
+
+        <div class="menu-section">Resources</div>
+        <ul>
             <li><a href="#" id="menu-resources">
                 <span class="menu-icon">📚</span>
                 Resources
@@ -270,6 +276,10 @@
                 <span class="menu-icon">🧪</span>
                 Virtual Labs
             </a></li>
+        </ul>
+
+        <div class="menu-section">Knowledge Base</div>
+        <ul>
             <li><a href="#" id="menu-blog">
                 <span class="menu-icon">📰</span>
                 Blog
@@ -278,6 +288,19 @@
     </nav>
     <!-- Animated Background -->
     <div class="animated-bg"></div>
+
+    <style>
+        .menu-section {
+            color: var(--accent-text, #00ffe7);
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+    </style>
     
     <!-- Floating Particles -->
     <div class="particles" id="particles"></div>
@@ -323,10 +346,10 @@
         <!-- About Section -->
         <section id="about" class="section">
             <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
+                <h1 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
                     <span class="glitch" data-text="ABOUT_ME.EXE">ABOUT_ME.EXE</span>
-                </h2>
-                
+                </h1>
+
                 <div class="terminal slide-in-left">
                     <div class="terminal-header">
                         <div class="terminal-buttons">
@@ -383,21 +406,21 @@
 
                 <div class="grid">
                     <div class="card slide-in-left">
-                        <h3 class="card-title">🎯 MISIÓN</h3>
+                        <h3>🎯 MISIÓN</h3>
                         <div class="card-content">
                             <p>Proteger infraestructuras críticas mediante técnicas avanzadas de <strong>Ethical Hacking</strong> y <strong>Penetration Testing</strong>. Mi objetivo es identificar vulnerabilidades antes que los atacantes y fortalecer la postura de seguridad de las organizaciones.</p>
                         </div>
                     </div>
 
                     <div class="card slide-in-right">
-                        <h3 class="card-title">🛡️ FILOSOFÍA</h3>
+                        <h3>🛡️ FILOSOFÍA</h3>
                         <div class="card-content">
                             <p>La seguridad no es un producto, es un proceso. Creo en el <strong>aprendizaje continuo</strong>, la <strong>innovación constante</strong> y en pensar como un atacante para defender mejor. Cada vulnerabilidad es una oportunidad de mejora.</p>
                         </div>
                     </div>
 
                     <div class="card fade-in">
-                        <h3 class="card-title">🎓 FORMACIÓN ACADÉMICA</h3>
+                        <h3>🎓 FORMACIÓN ACADÉMICA</h3>
                         <div class="card-content">
                             <p><strong>Instituto:</strong> CIBERTEC</p>
                             <p><strong>Especialidad:</strong> Administrador de Redes y Comunicaciones</p>
@@ -413,13 +436,13 @@
         <!-- Skills Section -->
         <section id="skills" class="section">
             <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
+                <h1 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
                     <span class="glitch" data-text="SKILL_MATRIX.DAT">SKILL_MATRIX.DAT</span>
-                </h2>
+                </h1>
 
                 <div class="grid">
                     <div class="card slide-in-left">
-                        <h3 class="card-title">🔐 CYBERSECURITY</h3>
+                        <h3>🔐 CYBERSECURITY</h3>
                         <div class="skill-item">
                             <div class="skill-header">
                                 <span class="skill-name">Ethical Hacking</span>
@@ -460,7 +483,7 @@
                 
 
                     <div class="card slide-in-right">
-                        <h3 class="card-title">🌐 NETWORKING</h3>
+                        <h3>🌐 NETWORKING</h3>
                         <div class="skill-item">
                             <div class="skill-header">
                                 <span class="skill-name">CISCO CCNA</span>
@@ -500,7 +523,7 @@
                     </div>
 
                     <div class="card fade-in">
-                        <h3 class="card-title">🛠️ TOOLS & PLATFORMS</h3>
+                        <h3>🛠️ TOOLS & PLATFORMS</h3>
                         <div class="skill-item">
                             <div class="skill-header">
                                 <span class="skill-name">Kali Linux</span>
@@ -540,7 +563,7 @@
                     </div>
 
                     <div class="card slide-in-left">
-                        <h3 class="card-title">💻 PROGRAMMING</h3>
+                        <h3>💻 PROGRAMMING</h3>
                         <div class="skill-item">
                             <div class="skill-header">
                                 <span class="skill-name">Python</span>
@@ -585,13 +608,13 @@
         <!-- Projects Section -->
         <section id="projects" class="section">
             <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
+                <h1 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
                     <span class="glitch" data-text="PROJECTS.LOG">PROJECTS.LOG</span>
-                </h2>
+                </h1>
 
                 <!-- PROYECTOS ACADÉMICOS -->
                 <div class="card fade-in" style="margin-bottom:2.5rem;">
-                    <h3 class="card-title">🎓 PROYECTOS ACADÉMICOS</h3>
+                    <h2 class="card-title">🎓 PROYECTOS ACADÉMICOS</h2>
                     <ul style="padding-left:1.5rem;">
                         <li>
                             <strong>Sistemas Operativos Avanzados:</strong>
@@ -634,7 +657,7 @@
 
                 <!-- PROYECTOS PERSONALES -->
                 <div class="card fade-in" style="margin-bottom:2.5rem;">
-                    <h3 class="card-title">🚀 PROYECTOS PERSONALES</h3>
+                    <h2 class="card-title">🚀 PROYECTOS PERSONALES</h2>
                     <div class="grid">
                         <div class="project-card slide-in-left">
                             <h3 class="project-title">💻 PORTAFOLIO</h3>
@@ -679,13 +702,13 @@
         <!-- Certifications Section -->
         <section id="certs" class="section">
             <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
+                <h1 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
                     <span class="glitch" data-text="CERTIFICATIONS.SYS">CERTIFICATIONS.SYS</span>
-                </h2>
+                </h1>
 
                 <!-- CERTIFICADOS CISCO -->
                 <div class="card fade-in" style="margin-bottom:2.5rem;">
-                    <h3 class="card-title">🎓 Certificaciones y Cursos Cisco Networking Academy</h3>
+                    <h2 class="card-title">🎓 Certificaciones y Cursos Cisco Networking Academy</h2>
                     <ul style="padding-left:1.5rem;">
                         <li>
                             <strong>DevNet Associate</strong> (Certificado e Insignia) - Emitido: 31 jul 2024
@@ -770,7 +793,7 @@
 
                 <div class="grid">
                     <div class="card slide-in-left">
-                        <h3 class="card-title">🏆 CISCO CCNA R&S</h3>
+                        <h3>🏆 CISCO CCNA R&S</h3>
                         <div class="card-content">
                             <p><strong>Credential ID:</strong> CSCO12345678</p>
                             <p><strong>Issued:</strong> Junio 2023</p>
@@ -780,7 +803,7 @@
                     </div>
 
                     <div class="card slide-in-right">
-                        <h3 class="card-title">🛡️ CISCO CCNA Security</h3>
+                        <h3>🛡️ CISCO CCNA Security</h3>
                         <div class="card-content">
                             <p><strong>Credential ID:</strong> CSCO87654321</p>
                             <p><strong>Issued:</strong> Agosto 2023</p>
@@ -790,7 +813,7 @@
                     </div>
 
                     <div class="card fade-in">
-                        <h3 class="card-title">🎯 CompTIA Security+</h3>
+                        <h3>🎯 CompTIA Security+</h3>
                         <div class="card-content">
                             <p><strong>Credential ID:</strong> COMP11223344</p>
                             <p><strong>Issued:</strong> Enero 2024</p>
@@ -800,7 +823,7 @@
                     </div>
 
                     <div class="card slide-in-left">
-                        <h3 class="card-title">🔐 Certified Ethical Hacker</h3>
+                        <h3>🔐 Certified Ethical Hacker</h3>
                         <div class="card-content">
                             <p><strong>Credential ID:</strong> ECC44556677</p>
                             <p><strong>Issued:</strong> Marzo 2024</p>
@@ -812,16 +835,51 @@
             </div>
         </section>
 
+        <!-- Auditoria Section -->
+        <section id="auditoria" class="section">
+            <div class="container">
+                <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">
+                    <span class="glitch" data-text="AUDITORÍA DE AUDITORÍAS">AUDITORÍA DE AUDITORÍAS</span>
+                </h1>
+
+                <form id="audit-form" class="card fade-in" style="margin-bottom: 2rem;">
+                    <h3>Registrar / Modificar Auditoría</h3>
+                    <div class="form-group">
+                        <label for="maquina">Máquina:</label>
+                        <input type="text" id="maquina" name="maquina" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ip">IP:</label>
+                        <input type="text" id="ip" name="ip" class="form-input" required pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" title="Formato IP válido">
+                    </div>
+                    <div class="form-group">
+                        <label for="vulnerabilidades">Vulnerabilidades:</label>
+                        <textarea id="vulnerabilidades" name="vulnerabilidades" class="form-textarea" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="recomendaciones">Recomendaciones:</label>
+                        <textarea id="recomendaciones" name="recomendaciones" class="form-textarea" rows="4" required></textarea>
+                    </div>
+                    <input type="hidden" id="audit-id" name="audit-id" value="">
+                    <button type="submit" class="btn">Guardar Auditoría</button>
+                    <button type="button" id="cancel-edit" class="btn secondary" style="display:none; margin-left: 1rem;">Cancelar</button>
+                </form>
+
+                <div id="audit-list" class="grid"></div>
+            </div>
+        </section>
+
         <!-- Contact Section -->
         <section id="contact" class="section">
             <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
+                <h1 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
                     <span class="glitch" data-text="CONTACT.EXE">CONTACT.EXE</span>
-                </h2>
+                </h1>
+
 
                 <div class="grid">
                     <div class="card slide-in-left">
-                        <h3 class="card-title">📡 ESTABLISH_CONNECTION</h3>
+                        <h3>📡 ESTABLISH_CONNECTION</h3>
                         <div class="card-content">
                             <form id="contact-form" role="form" aria-label="Contact form">
                                 <div class="form-group">
@@ -848,7 +906,7 @@
                     </div>
 
                     <div class="card slide-in-right">
-                        <h3 class="card-title">🌐 NETWORK_INFO</h3>
+                        <h3>🌐 NETWORK_INFO</h3>
                         <div class="terminal-content">
                             <div class="terminal-line">
                                 <span class="terminal-prompt">📧 EMAIL:</span> 
@@ -887,7 +945,7 @@
                 </div>
 
                 <div class="card fade-in" style="margin-top: 2rem;">
-                    <h3 class="card-title">🚀 CURRENT_STATUS</h3>
+                    <h3>🚀 CURRENT_STATUS</h3>
                     <div class="terminal-content">
                         <div class="terminal-line">
                             <span class="terminal-prompt">[INFO]</span> 
@@ -910,56 +968,23 @@
             </div>
         </section>
 
-        <!-- Auditoria Section -->
-        <section id="auditoria" class="section">
-            <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
-                    <span class="glitch" data-text="AUDITORIA.EXE">AUDITORIA.EXE</span>
-                </h2>
-                <div class="grid">
-                    <div class="card slide-in-left">
-                        <h3 class="card-title">📝 INGRESE_DATOS</h3>
-                        <div class="card-content">
-                            <form id="auditoria-form" role="form" aria-label="Auditoria form">
-                                <div class="form-group">
-                                    <label class="form-label" for="maquina" aria-required="true">root@maquina:</label>
-                                    <input type="text" id="maquina" name="maquina" class="form-input" required
-                                           aria-describedby="maquina-error">
-                                    <div id="maquina-error" class="error-message" role="alert"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="ip">root@ip:</label>
-                                    <input type="text" id="ip" name="ip" class="form-input" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="vulnerabilidades">root@vulnerabilidades:</label>
-                                    <textarea id="vulnerabilidades" name="vulnerabilidades" rows="5" class="form-textarea" required></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="recomendaciones">root@recomendaciones:</label>
-                                    <textarea id="recomendaciones" name="recomendaciones" rows="5" class="form-textarea" required></textarea>
-                                </div>
-                                <button type="submit" class="btn">GUARDAR_AUDITORIA.EXE</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Auditoria List Section -->
-        <section id="auditoria-list" class="section">
-            <div class="container">
-                <h2 class="card-title" style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">
-                    <span class="glitch" data-text="AUDITORIAS.LOG">AUDITORIAS.LOG</span>
-                </h2>
-                <div id="audits-container" class="grid">
-                    <!-- Audits will be loaded here -->
-                </div>
-            </div>
-        </section>
-    </main>
-
     <script src="{% static 'js/cybertools.js' %}"></script>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Juan Mamani. Versión 1.0.0</p>
+        </div>
+    </footer>
 </body>
 </html>
+
+<style>
+    .footer {
+        background: var(--secondary-bg);
+        border-top: 1px solid var(--border-color);
+        padding: 1rem 0;
+        text-align: center;
+        color: var(--secondary-text);
+        font-size: 0.8rem;
+    }
+</style>
