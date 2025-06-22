@@ -34,6 +34,8 @@ class Message(models.Model):
     def __str__(self):
         return f"Message from {self.name}"
 
+import re
+
 class Audit(models.Model):
     maquina = models.CharField(max_length=100)
     ip = models.CharField(max_length=20)
@@ -43,6 +45,18 @@ class Audit(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
+
+    def save(self, *args, **kwargs):
+        # Sanitizar campos de texto para eliminar etiquetas script y comentarios HTML
+        def sanitize(text):
+            text = re.sub(r'<script.*?>.*?</script>', '', text, flags=re.IGNORECASE|re.DOTALL)
+            text = re.sub(r'<!--.*?-->', '', text, flags=re.DOTALL)
+            return text.strip()
+
+        self.maquina = sanitize(self.maquina)
+        self.vulnerabilidades = sanitize(self.vulnerabilidades)
+        self.recomendaciones = sanitize(self.recomendaciones)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Audit of {self.maquina}"
