@@ -1,0 +1,198 @@
+/* Additional CSS for Cyber Tools integration */
+.main-content {
+    margin-left: 0;
+    padding: 20px;
+    min-height: 100vh;
+    transition: margin-left 0.4s ease;
+}
+
+.content-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.content-section h2 {
+    color: var(--accent-text, #00ffe7);
+    margin-bottom: 30px;
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(0, 255, 231, 0.3);
+}
+
+/* Formularios */
+.form-container {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(0, 255, 231, 0.2);
+    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: var(--accent-text, #00ffe7);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 255, 231, 0.3);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-text, #00ffe7);
+    box-shadow: 0 0 10px rgba(0, 255, 231, 0.3);
+}
+
+button[type="submit"],
+.content-section button {
+    background: linear-gradient(135deg, var(--accent-text, #00ffe7), #00d4aa);
+    color: #181c24;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover,
+.content-section button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 231, 0.4);
+}
+
+/* Scripts list */
+.scripts-list {
+    margin-top: 30px;
+}
+
+.script-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 231, 0.2);
+    border-radius: 10px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.script-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(0, 255, 231, 0.1);
+}
+
+.script-header h4 {
+    color: var(--accent-text, #00ffe7);
+    margin: 0;
+}
+
+.script-type {
+    background: rgba(0, 255, 231, 0.2);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.delete-btn {
+    background: rgba(255, 0, 0, 0.2);
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    color: #ff6b6b;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.script-content {
+    padding: 20px;
+}
+
+.commands {
+    margin: 15px 0;
+}
+
+.commands pre {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent-text, #00ffe7);
+    overflow-x: auto;
+    margin-bottom: 10px;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.tool-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 231, 0.2);
+    text-align: center;
+}
+
+.tool-card h4 {
+    color: var(--accent-text, #00ffe7);
+    margin-bottom: 15px;
+}
+
+.tool-card code {
+    display: block;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    word-break: break-all;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--accent-text, #00ffe7), #00d4aa);
+    color: #181c24;
+    padding: 15px 25px;
+    border-radius: 8px;
+    z-index: 10000;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.no-scripts {
+    text-align: center;
+    color: var(--text-secondary, #b0b0b0);
+    font-style: italic;
+    padding: 40px;
+}
