@@ -224,3 +224,42 @@ def delete_audit_view(request, audit_id):
     except Exception as e:
         logger.error(f"Error deleting audit {audit_id}: {e}")
         return JsonResponse({'errors': {'server': str(e)}}, status=500)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def log_audit_action_view(request):
+    try:
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)
+        else:
+            return JsonResponse({'errors': {'body': 'Invalid content type'}}, status=415) # Unsupported Media Type
+
+        audit_id = data.get('audit_id')
+        command = data.get('command')
+        arguments = data.get('arguments', '')
+        output = data.get('output', '')
+
+        if not audit_id or not command:
+            return JsonResponse({'errors': {'fields': 'audit_id and command are required'}}, status=400)
+
+        try:
+            audit = Audit.objects.get(pk=audit_id)
+        except Audit.DoesNotExist:
+            logger.info(f"Audit not found with id {audit_id} for logging action")
+            return JsonResponse({'errors': {'audit_id': 'Audit not found'}}, status=404)
+
+        action = AuditAction.objects.create(
+            audit=audit,
+            command=command,
+            arguments=arguments,
+            output=output
+        )
+        logger.info(f"Audit action logged for audit {audit_id}: {command}")
+        return JsonResponse({'status': 'success', 'action_id': action.id}, status=201) # Created
+
+    except json.JSONDecodeError:
+        logger.error("Invalid JSON in log_audit_action_view")
+        return JsonResponse({'errors': {'body': 'Invalid JSON'}}, status=400)
+    except Exception as e:
+        logger.error(f"Error logging audit action: {e}")
+        return JsonResponse({'errors': {'server': str(e)}}, status=500)

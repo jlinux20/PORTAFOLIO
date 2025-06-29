@@ -629,7 +629,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function startEditAudit(id) {
-        fetch(`/${id}/`)
+        fetch(`/audits/${id}/`)
             .then(response => response.json())
             .then(data => {
                 if (data.errors) {
@@ -651,7 +651,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function deleteAudit(id) {
         if (!confirm('¿Está seguro de eliminar esta auditoría?')) return;
-        fetch(`/${id}/delete/`, { method: 'DELETE' })
+        fetch(`/audits/${id}/delete/`, { method: 'DELETE' })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
@@ -705,7 +705,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let url = '/audits/create/';
         let method = 'POST';
         if (auditId) {
-            url = `/${auditId}/update/`;
+            url = `/audits/${auditId}/update/`;
             method = 'PUT';
         }
 

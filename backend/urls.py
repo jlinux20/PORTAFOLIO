@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from backend.core.views import example_view, index_view, contact_view, recent_messages_view, create_audit_view, list_audits_view, get_audit_view, update_audit_view, delete_audit_view
+from backend.core.views import example_view, index_view, contact_view, recent_messages_view, create_audit_view, list_audits_view, get_audit_view, update_audit_view, delete_audit_view, log_audit_action_view
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -17,6 +17,7 @@ urlpatterns = [
     path('audits/<int:audit_id>/', get_audit_view, name='get_audit'),
     path('audits/<int:audit_id>/update/', update_audit_view, name='update_audit'),
     path('audits/<int:audit_id>/delete/', delete_audit_view, name='delete_audit'),
+    path('audit/action/', log_audit_action_view, name='log_audit_action'),
 ]
 
 

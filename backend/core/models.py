@@ -60,3 +60,16 @@ class Audit(models.Model):
 
     def __str__(self):
         return f"Audit of {self.maquina}"
+
+class AuditAction(models.Model):
+    audit = models.ForeignKey(Audit, on_delete=models.CASCADE, related_name='actions')
+    command = models.CharField(max_length=255)
+    arguments = models.TextField(blank=True)
+    output = models.TextField(blank=True)
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"Action '{self.command}' for Audit {self.audit.id} at {self.timestamp}"

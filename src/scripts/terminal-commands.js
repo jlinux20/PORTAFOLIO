@@ -14,11 +14,14 @@ export class TerminalCommands {
       exploit: this.runExploit,
       social: this.socialLinks,
       cv: this.downloadCV,
-      easter: this.easterEgg
+      easter: this.easterEgg,
+      startaudit: this.startAudit // Nuevo comando
     };
     
     this.currentPath = '~/portfolio';
+    this.commands.endaudit = this.endAudit; // Nuevo comando endaudit
     this.username = 'juan@cybersec';
+    this.currentAuditId = null; // Para almacenar el ID de la auditoría actual
   }
 
   // Ejecutar comando
@@ -26,9 +29,19 @@ export class TerminalCommands {
     const cmd = command.toLowerCase();
     
     if (this.commands[cmd]) {
-      return await this.commands[cmd].call(this, args);
+      const result = await this.commands[cmd].call(this, args);
+      // Log the command and its result if an audit is active
+      if (this.currentAuditId) {
+        this.logAuditAction(this.currentAuditId, command, args, result);
+      }
+      return result;
     } else {
-      return `bash: ${command}: command not found\nType 'help' for available commands`;
+      const result = `bash: ${command}: command not found\nType 'help' for available commands`;
+      // Log the command even if not found, if an audit is active
+      if (this.currentAuditId) {
+         this.logAuditAction(this.currentAuditId, command, args, result);
+      }
+      return result;
     }
   }
 
@@ -304,5 +317,105 @@ Certifications: CCNA R&S, CCNA Security, DevNet Associate
     
     Keep hacking ethically! 🔐👨‍💻
     `;
+  }
+  // Log audit action to the backend
+  async logAuditAction(auditId, command, args, output) {
+    try {
+      const response = await fetch('/api/audit/action/', { // Need to create this endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Include CSRF token if necessary
+          'X-CSRFToken': this.getCookie('csrftoken') // Assuming a function getCookie exists or needs to be added
+        },
+        body: JSON.stringify({
+          audit_id: auditId,
+          command: command,
+          arguments: JSON.stringify(args), // Store args as JSON string
+          output: output
+        })
+      });
+
+      if (!response.ok) {
+        console.error('Failed to log audit action:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error logging audit action:', error);
+    }
+  }
+
+  // Comando para iniciar una nueva auditoría
+  async startAudit(args) {
+    if (args.length < 2) {
+      return 'Usage: startaudit <machine_name> <ip_address>';
+    }
+
+    const maquina = args[0];
+    const ip = args[1];
+
+    // Basic IP address validation (can be improved)
+    const ipPattern = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
+    if (!ipPattern.test(ip)) {
+        return `Invalid IP address format: ${ip}`;
+    }
+
+
+    try {
+      const response = await fetch('/api/audit/create/', { // Using the existing create_audit endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': this.getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+          maquina: maquina,
+          ip: ip,
+          vulnerabilidades: '', // Initial empty values
+          recomendaciones: ''   // Initial empty values
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        this.currentAuditId = data.audit_id;
+        return `Audit started for machine "${maquina}" (${ip}). Audit ID: ${this.currentAuditId}`;
+      } else {
+        // Handle backend errors (e.g., invalid IP format caught by backend)
+        const errorMessage = data.errors ? Object.values(data.errors).join(', ') : 'Unknown error';
+        return `Failed to start audit: ${errorMessage}`;
+      }
+    } catch (error) {
+      console.error('Error starting audit:', error);
+      return `Error starting audit: ${error.message}`;
+    }
+  }
+
+  // Helper function to get CSRF token (needs to be added if not present)
+  getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  // Comando para finalizar la auditoría actual
+  endAudit() {
+    if (this.currentAuditId) {
+      const finishedAuditId = this.currentAuditId;
+      this.currentAuditId = null;
+      return `Audit with ID ${finishedAuditId} finished. No longer logging actions for this audit.`;
+    } else {
+      return 'No active audit to finish.';
+    }
   }
 }
